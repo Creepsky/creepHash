@@ -4,6 +4,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using MultiCryptoToolLib.Common;
+using MultiCryptoToolLib.Common.Logging;
 using MultiCryptoToolLib.Mining;
 using Newtonsoft.Json.Linq;
 
@@ -41,8 +42,15 @@ namespace MultiCryptoToolLib.Network
 
             foreach (var i in json.Children<JProperty>())
             {
-                var j = (JObject) i.Value;
-                infos.Add(Coin.FromString(i.Name).CreateInfo(j.Value<int>("port"), j.Value<double>("profitability")));
+                try
+                {
+                    var j = (JObject) i.Value;
+                    infos.Add(Coin.FromString(i.Name).CreateInfo(j.Value<int>("port"), j.Value<double>("profitability")));
+                }
+                catch (Exception)
+                {
+                    Logger.Debug($"Unknown coin {i.Name}");
+                }
             }
 
             return infos;
