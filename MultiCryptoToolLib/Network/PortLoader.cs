@@ -4,11 +4,13 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using MultiCryptoToolLib.Common;
+using MultiCryptoToolLib.Common.Logging;
 using Newtonsoft.Json.Linq;
+using Console = System.Console;
 
 namespace MultiCryptoToolLib.Network
 {
-    public class PortLoader : ILoaderAsync<IDictionary<Mining.Algorithm, int>>
+    public class PortLoader : ILoaderAsync<IDictionary<Mining.Coin, int>>
     {
         private readonly Uri _uri;
 
@@ -17,7 +19,7 @@ namespace MultiCryptoToolLib.Network
             _uri = uri;
         }
 
-        public IDictionary<Mining.Algorithm, int> Load(CancellationToken ctx)
+        public IDictionary<Mining.Coin, int> Load(CancellationToken ctx)
         {
             using (var w = new WebClient())
             {
@@ -25,7 +27,7 @@ namespace MultiCryptoToolLib.Network
             }
         }
 
-        public async Task<IDictionary<Mining.Algorithm, int>> LoadAsync(CancellationToken ctx)
+        public async Task<IDictionary<Mining.Coin, int>> LoadAsync(CancellationToken ctx)
         {
             using (var w = new WebClient())
             {
@@ -33,12 +35,19 @@ namespace MultiCryptoToolLib.Network
             }
         }
 
-        private static IDictionary<Mining.Algorithm, int> ParsePorts(string content)
+        private static IDictionary<Mining.Coin, int> ParsePorts(string content)
         {
             var json = JObject.Parse(content);
-            var ports = new Dictionary<Mining.Algorithm, int>();
+            var ports = new Dictionary<Mining.Coin, int>();
             foreach (var j in json)
-                ports.Add(Mining.Algorithm.FromString(j.Key), j.Value.Value<int>());
+                try
+                {
+                    ports.Add(Mining.Coin.FromString(j.Key), j.Value.Value<int>("port"));
+                }
+                catch (Exception)
+                {
+                    Logger.Debug($"Unknown coin {j.Key}");
+                }
             return ports;
         }
     }

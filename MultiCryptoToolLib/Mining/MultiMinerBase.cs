@@ -15,11 +15,11 @@ using MultiCryptoToolLib.Network.Proxy;
 
 namespace MultiCryptoToolLib.Mining
 {
-    using HardwareMinerAlgorithmProfit = IDictionary<Hardware.Hardware, MinerAlgorithmProfit>;
+    using HardwareMinerProfit = IDictionary<Hardware.Hardware, MinerProfit>;
 
-    public class MinerAlgorithmProfit
+    public class MinerProfit
     {
-        public Algorithm Algorithm;
+        public Coin Key;
         public Miner Miner;
         public double Profit;
     }
@@ -84,7 +84,7 @@ namespace MultiCryptoToolLib.Mining
                 {
                     try
                     {
-                        var coinInfos = new CoinInfoLoader(new Uri(Uri, "coins")).LoadAsync(_ctx);
+                        var coinInfos = new CoinInfoLoader(new Uri(Uri, "mineableCoins")).LoadAsync(_ctx);
                         var bestAlgorithms = GetBestAlgorithmsAsync(hardware, benchmarks, coinInfos);
 
                         //bestAlgorithms.ContinueWith(i =>
@@ -139,7 +139,7 @@ namespace MultiCryptoToolLib.Mining
 
         private async Task<(IPAddress, TimeSpan)> GetFastestProxy()
         {
-            var proxyListLoader = new ProxyUriLoader(new Uri(Uri, "proxylist"));
+            var proxyListLoader = new ProxyUriLoader(new Uri(Uri, "network"));
             var ips = await proxyListLoader.LoadAsync(_ctx);
             var sb = new StringBuilder();
             sb.AppendLine("Available proxys:");
@@ -151,10 +151,10 @@ namespace MultiCryptoToolLib.Mining
             return fastest;
         }
 
-        private async Task<(IPAddress ip, IDictionary<Algorithm, int> ports)> GetProxyAndPorts()
+        private async Task<(IPAddress ip, IDictionary<Coin, int> ports)> GetProxyAndPorts()
         {
             var ip = await GetFastestProxy();
-            var portsUri = new Uri($"http://{ip.Item1}:3001/algorithms");
+            var portsUri = new Uri($"http://{ip.Item1}/coins");
             var ports = await new PortLoader(portsUri).LoadAsync(_ctx);
             return (ip.Item1, ports);
         }
@@ -251,7 +251,7 @@ namespace MultiCryptoToolLib.Mining
             return benchmarkFiles;
         }
 
-        private static async Task<HardwareMinerAlgorithmProfit> GetBestAlgorithmsAsync(
+        private static async Task<HardwareMinerProfit> GetBestAlgorithmsAsync(
             Task<IList<Hardware.Hardware>> hardwareTask,
             Task<IDictionary<Miner, IBenchmarkFile>> benchmarkFilesTask,
             Task<IList<Coin.Info>> coinInfosTask)
@@ -262,43 +262,46 @@ namespace MultiCryptoToolLib.Mining
             return GetBestAlgorithms(hardware, benchmarkFiles, coinInfos);
         }
 
-        private static HardwareMinerAlgorithmProfit GetBestAlgorithms(
+        private static HardwareMinerProfit GetBestAlgorithms(
             IEnumerable<Hardware.Hardware> hardware, IDictionary<Miner, IBenchmarkFile> benchmarkFiles,
             IEnumerable<Coin.Info> coinInfos)
         {
             Logger.Info("Calculating most profitable algorithms...");
-            var bestHardwareAlgorithms = hardware.ToDictionary(i => i, i => default(MinerAlgorithmProfit));
-            var algorithmInfos = coinInfos.GroupBy(i => i.Coin.Algorithm).ToDictionary(i => i.Key, i => i.ToList());
+            var bestHardwareAlgorithms = hardware.ToDictionary(i => i, i => default(MinerProfit));
+            //var algorithmInfos = coinInfos.GroupBy(i => i.Coin.Algorithm).ToDictionary(i => i.Key, i => i.ToList());
 
-            Coin.Info GetBestCoin(IList<Coin.Info> ci)
+            //Coin.Info GetBestCoin(IList<Coin.Info> ci)
+            //{
+            //    var best = new Coin.Info();
+
+            //    for (var i = 0; i < ci.Count; ++i)
+            //        if (i == 0 || best.Profitability < ci[i].Profitability)
+            //            best = ci[i];
+
+            //    return best;
+            //}
+
+            //var algorithmBestCoins = algorithmInfos.ToDictionary(i => i.Key, i => GetBestCoin(i.Value));
+
+            //foreach (var a in algorithmBestCoins)
+            foreach (var c in coinInfos)
             {
-                var best = new Coin.Info();
+                var a = c.Coin.Algorithm;
 
-                for (var i = 0; i < ci.Count; ++i)
-                    if (i == 0 || best.Profitability < ci[i].Profitability)
-                        best = ci[i];
-
-                return best;
-            }
-
-            var algorithmBestCoins = algorithmInfos.ToDictionary(i => i.Key, i => GetBestCoin(i.Value));
-
-            foreach (var a in algorithmBestCoins)
-            {
                 foreach (var b in benchmarkFiles)
                 {
                     foreach (var h in b.Value.HashRates)
                     {
-                        if (h.Value.ContainsKey(a.Key))
+                        if (h.Value.ContainsKey(a))
                         {
-                            var profit = a.Value.Profitability * h.Value[a.Key].Value;
+                            var profit = c.Profitability * h.Value[a].Value;
 
                             if (bestHardwareAlgorithms[h.Key] == null ||
                                 bestHardwareAlgorithms[h.Key].Profit < profit)
                             {
-                                bestHardwareAlgorithms[h.Key] = new MinerAlgorithmProfit
+                                bestHardwareAlgorithms[h.Key] = new MinerProfit
                                 {
-                                    Algorithm = a.Key,
+                                    Key = c.Coin,
                                     Miner = b.Key,
                                     Profit = profit
                                 };
@@ -312,7 +315,7 @@ namespace MultiCryptoToolLib.Mining
             sb.AppendLine("Most profitable algorithms:");
 
             foreach (var bha in bestHardwareAlgorithms)
-                sb.AppendLine($"- {bha.Key}: {bha.Value.Algorithm}");
+                sb.AppendLine($"- {bha.Key}: {bha.Value?.Key}");
 
             Logger.Info(sb.ToString());
 
@@ -320,8 +323,8 @@ namespace MultiCryptoToolLib.Mining
         }
 
         private async Task RunMiningInstancesAsync(
-            Task<HardwareMinerAlgorithmProfit> bestAlgorithmsTask,
-            Task<(IPAddress ip, IDictionary<Algorithm, int> ports)> proxyTask)
+            Task<HardwareMinerProfit> bestAlgorithmsTask,
+            Task<(IPAddress ip, IDictionary<Coin, int> ports)> proxyTask)
         {
             try
             {
@@ -336,11 +339,15 @@ namespace MultiCryptoToolLib.Mining
 
                 foreach (var ba in bestAlgorithms)
                 {
+                    if (ba.Value == null)
+                        continue;
+
                     var hardwareInUse = _miningInstances.FirstOrDefault(i => i.MiningHardware.Contains(ba.Key));
 
                     var alreadyRunning = _miningInstances.Any(i =>
                         hardwareInUse != null &&
-                        i.Algorithm == ba.Value.Algorithm &&
+                        // TODO: changed from i.Algorithm == ba.Value.Key
+                        i.Algorithm == ba.Value.Key.Algorithm &&
                         i.Miner == ba.Value.Miner);
 
                     if (!alreadyRunning)
@@ -367,7 +374,7 @@ namespace MultiCryptoToolLib.Mining
 #pragma warning restore 4014
 
                         _miningInstances.Add(miningInstance);
-                        Logger.Info($"Started mining {ba.Value.Algorithm} with {ba.Value.Miner} on {ba.Key}");
+                        Logger.Info($"Started mining {ba.Value.Key} with {ba.Value.Miner} on {ba.Key}");
                     }
                 }
             }
