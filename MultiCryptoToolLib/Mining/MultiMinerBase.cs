@@ -197,7 +197,8 @@ namespace MultiCryptoToolLib.Mining
             var cudaGpus = new CudaLoader().LoadAsync(_ctx);
             var openclGpus = new OpenClLoader().LoadAsync(_ctx);
                     
-            hardware.AddRange(cudaGpus.Result.Any() ? cudaGpus.Result : openclGpus.Result);
+            hardware.AddRange(cudaGpus.Result);
+            hardware.AddRange(openclGpus.Result);
             
             var sb = new StringBuilder();
             sb.AppendLine("Found hardware:");
