@@ -27,7 +27,6 @@ namespace MultiCryptoToolLib.Mining
     public class MultiMinerBase
     {
         private CancellationToken _ctx;
-        private readonly IPAddress _ip;
         private IList<Hardware.Hardware> _hardware;
         private IList<Miner> _miner;
         private IPAddress _proxy;
@@ -39,11 +38,15 @@ namespace MultiCryptoToolLib.Mining
         public event Action<IDictionary<Miner, IBenchmarkFile>> BenchmarksLoaded;
         public event Action<IPAddress> ProxyFound;
 
-        public Uri Uri => new Uri($"http://{_ip}");
+        public Uri Uri { get; }
+        public Coin Coin { get; }
+        public string Address { get; }
 
-        public MultiMinerBase(IPAddress ip, CancellationToken ctx)
+        public MultiMinerBase(Uri serverUri, Coin coin, string address, CancellationToken ctx)
         {
-            _ip = ip;
+            Uri = serverUri;
+            Coin = coin;
+            Address = address;
             _ctx = ctx;
         }
 
@@ -367,8 +370,9 @@ namespace MultiCryptoToolLib.Mining
                         var miningInstance = MiningInstance.Create(
                             ba.Value.Miner,
                             new[] {ba.Key},
-                            ba.Value.Algorithm,
-                            ip, ports[ba.Value.Algorithm]);
+                            ba.Value.Key.Algorithm,
+                            Coin, Address,
+                            ip, ports[ba.Value.Key]);
 
 #pragma warning disable 4014
                         miningInstance.RunAsync(_ctx);
