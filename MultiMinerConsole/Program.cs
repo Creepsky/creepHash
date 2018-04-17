@@ -11,11 +11,15 @@ namespace MultiMinerConsole
         {
             ConsoleLogger.Register();
 
-            if (args.Length < 4)
+            if (args.Length < 3)
             {
                 Logger.Fatal("Too few parameters");
                 return Usage();
             }
+
+            Algorithm.LoadFromJson("confs/algorithms.json");
+            Coin.LoadFromJson("confs/coins.json");
+            Miner.LoadFromJson("confs/miner.json");
 
             var uri = default(Uri);
             var coin = default(Coin);

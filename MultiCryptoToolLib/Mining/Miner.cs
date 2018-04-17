@@ -1,11 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using MultiCryptoToolLib.Common;
 using MultiCryptoToolLib.Mining.Hardware;
+using Newtonsoft.Json.Linq;
 
 namespace MultiCryptoToolLib.Mining
 {
     public class Miner
     {
+        private static readonly IList<Miner> Miners = new List<Miner>();
+
         public string Name { get; }
 
         public string Version { get; }
@@ -24,75 +30,46 @@ namespace MultiCryptoToolLib.Mining
             HardwareTypes = hardwareTypes;
         }
 
-        public static readonly Miner CcMiner = new Miner("ccminer", "2.2.4",
-            new HashSet<HardwareType>
-            {
-                HardwareType.Cuda
-            },
-            new HashSet<Algorithm>
-            {
-                Algorithm.Blakecoin,
-                Algorithm.Blake,
-                Algorithm.Blake2S,
-                Algorithm.Bastion,
-                Algorithm.Deep,
-                Algorithm.Decred,
-                Algorithm.Equihash,
-                Algorithm.Fresh,
-                Algorithm.Fugue256,
-                Algorithm.Groestl,
-                Algorithm.Hmq1725,
-                Algorithm.Hsr,
-                Algorithm.Keccak,
-                Algorithm.Jackpot,
-                Algorithm.Jha,
-                Algorithm.Lbry,
-                Algorithm.Luffa,
-                Algorithm.Lyra2,
-                Algorithm.Lyra2V2,
-                Algorithm.Lyra2Z,
-                Algorithm.MyrGr,
-                Algorithm.Neoscrypt,
-                Algorithm.Nist5,
-                Algorithm.Penta,
-                Algorithm.Phi,
-                Algorithm.Polytimos,
-                Algorithm.Qubit,
-                Algorithm.Sha256D,
-                Algorithm.Sha256T,
-                Algorithm.Sia,
-                Algorithm.Sib,
-                Algorithm.Scrypt,
-                Algorithm.Skein,
-                Algorithm.Skein2,
-                Algorithm.Skunk,
-                Algorithm.S3,
-                Algorithm.Timetravel,
-                Algorithm.Tribus,
-                Algorithm.Bitcore,
-                Algorithm.X11Evo,
-                Algorithm.X11,
-                Algorithm.X13,
-                Algorithm.X14,
-                Algorithm.X15,
-                Algorithm.X17,
-                Algorithm.Vanilla,
-                Algorithm.Veltor,
-                Algorithm.Whirlpool,
-                Algorithm.Zr5,
-            });
-
-        public static readonly Miner EthMiner = new Miner("ethminer", "0.14.0.dev2",
-            new HashSet<HardwareType>
-            {
-                HardwareType.OpenCl,
-                HardwareType.Cuda
-            },
-            new HashSet<Algorithm>
-            {
-                Algorithm.Ethash
-            });
-
         public override string ToString() => $"{Name} v.{Version}";
+
+        public static void LoadFromJson(string path)
+        {
+            Miners.Clear();
+            var lines = File.ReadAllText(path);
+            var minersJson = JObject.Parse(lines);
+
+            foreach (var token in minersJson)
+            {
+                var name = token.Key;
+                var version = token.Value["version"].Value<string>();
+                var hardware = new HashSet<HardwareType>(token.Value["hardware"].Values<string>().Select(i =>
+                {
+                    switch (i)
+                    {
+                        case "cpu":
+                            return HardwareType.Cpu;
+                        case "cuda":
+                            return HardwareType.Cuda;
+                        case "opencl":
+                            return HardwareType.OpenCl;
+                        default:
+                            throw new KeyNotFoundException($"Invalid hardware {i} for miner {name}");
+                    }
+                }));
+                var algorithms = new HashSet<Algorithm>(token.Value["algorithms"].Values<string>().Select(Algorithm.FromString));
+
+                Miners.Add(new Miner(name, version, hardware, algorithms));
+            }
+        }
+
+        public static Miner FromString(string name)
+        {
+            var miner = Miners?.FirstOrDefault(i => i.Name == name);
+
+            if (miner == null)
+                throw new ArgumentOutOfRangeException(nameof(name), $"Unknown miner {name}");
+
+            return miner;
+        } 
     }
 }

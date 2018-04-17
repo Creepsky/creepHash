@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using Newtonsoft.Json.Linq;
 
 namespace MultiCryptoToolLib.Mining
 {
     public class Coin
     {
+        private static readonly IList<Coin> Coins = new List<Coin>();
+
         public struct Info
         {
             public Coin Coin;
@@ -40,23 +44,25 @@ namespace MultiCryptoToolLib.Mining
 
         public bool IsMinableWith(Miner miner) => miner.Algorithms.Contains(Algorithm);
 
-        public static readonly Coin EthereumFuture = new Coin("Ethereum Future", "ETHF", Algorithm.Nist5);
-        public static readonly Coin MonaCoin = new Coin("MonaCoin", "MONA", Algorithm.Lyra2V2);
-        public static readonly Coin VertCoin = new Coin("VertCoin", "VTC", Algorithm.Lyra2V2);
-        public static readonly Coin LiteCoinTest = new Coin("LiteCoin Test", "LTCT", Algorithm.Scrypt);
-
-        public static readonly IList<Coin> AllCoins = new List<Coin>
+        public static void LoadFromJson(string path)
         {
-            EthereumFuture,
-            MonaCoin,
-            VertCoin,
-            LiteCoinTest
-        };
+            Coins.Clear();
+            var lines = File.ReadAllText(path);
+            var algorithmsJson = JObject.Parse(lines);
+
+            foreach (var token in algorithmsJson)
+            {
+                var shortName = token.Key;
+                var name = token.Value["name"].Value<string>();
+                var algorithm = token.Value["algorithm"].Value<string>();
+                Coins.Add(new Coin(name, shortName, Algorithm.FromString(algorithm)));
+            }
+        }
 
         public static Coin FromString(string name)
         {
-            var coin = AllCoins.FirstOrDefault(i => string.Equals(i.Name, name, StringComparison.CurrentCultureIgnoreCase) ||
-                                                    string.Equals(i.ShortName, name, StringComparison.CurrentCultureIgnoreCase));
+            var coin = Coins.FirstOrDefault(i => string.Equals(i.Name, name, StringComparison.CurrentCultureIgnoreCase) ||
+                                                 string.Equals(i.ShortName, name, StringComparison.CurrentCultureIgnoreCase));
 
             if (coin == null)
                 throw new ArgumentOutOfRangeException(nameof(name), $"Unknown coin {name}");

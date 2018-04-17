@@ -166,8 +166,8 @@ namespace MultiCryptoToolLib.Mining
         {
             var miner = new List<Miner>
             {
-                Miner.CcMiner,
-                Miner.EthMiner
+                Miner.FromString("ccminer"),
+                Miner.FromString("ethminer")
             };
 
             var loadedMiner = new List<Miner>();

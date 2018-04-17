@@ -35,10 +35,10 @@ namespace MultiCryptoToolLib.Benchmark
 
         public static Benchmark Create(Miner miner, Algorithm algorithm, Hardware hardware)
         {
-            if (miner == Miner.CcMiner)
+            if (miner.Name == "ccminer")
                 return new CcminerBenchmark(algorithm, hardware);
 
-            if (miner == Miner.EthMiner)
+            if (miner.Name == "ethminer")
                 return new EthminerBenchmark(algorithm, hardware);
 
             throw new ArgumentException($"No benchmark found for {miner}");

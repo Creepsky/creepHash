@@ -11,7 +11,7 @@ namespace MultiCryptoToolLib.Benchmark
     public class EthminerBenchmark : Benchmark
     {
         public EthminerBenchmark(Algorithm algorithm, Hardware miningHardware)
-            : base(Miner.EthMiner, algorithm, miningHardware)
+            : base(Miner.FromString("ethminer"), algorithm, miningHardware)
         {
         }
 

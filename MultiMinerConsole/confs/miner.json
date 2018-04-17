@@ -1,0 +1,63 @@
+{
+    "ccminer": {
+        "version": "2.2.4",
+        "hardware": [ "cuda", "opencl" ],
+        "algorithms": [
+            "blake2S",
+            "bastion",
+            "blakecoin",
+            "deep",
+            "decred",
+            "equihash",
+            "fresh",
+            "fugue256",
+            "groestl",
+            "hmq1725",
+            "hsr",
+            "keccak",
+            "jackpot",
+            "jha",
+            "lbry",
+            "luffa",
+            "lyra2",
+            "lyra2V2",
+            "lyra2Z",
+            "myrGr",
+            "neoscrypt",
+            "nist5",
+            "penta",
+            "phi",
+            "polytimos",
+            "qubit",
+            "sha256d",
+            "sha256t",
+            "sia",
+            "sib",
+            "scrypt",
+            "skein",
+            "skein2",
+            "skunk",
+            "s3",
+            "timetravel",
+            "tribus",
+            "bitcore",
+            "x11evo",
+            "x11",
+            "x13",
+            "x14",
+            "x15",
+            "x17",
+            "vanilla",
+            "veltor",
+            "whirlpool",
+            "zr5"
+        ]
+    },
+    "ethminer": {
+        "version": "0.14.0.dev2",
+        "hardware": [ "cuda", "opencl" ],
+        "algorithms": [
+            "ethash"
+        ]
+    }
+}

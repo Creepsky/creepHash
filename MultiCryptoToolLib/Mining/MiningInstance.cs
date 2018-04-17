@@ -50,9 +50,10 @@ namespace MultiCryptoToolLib.Mining
         public static MiningInstance Create(Miner miner, IEnumerable<Hardware.Hardware> hardware, Algorithm algorithm,
             Coin rewardCoin, string rewardAddress, IPAddress ip, int port)
         {
-            if (miner == Miner.CcMiner)
+            if (miner.Name == "ccminer")
                 return new CcminerInstance(hardware, algorithm, rewardCoin, rewardAddress, ip, port);
-            if (miner == Miner.EthMiner)
+
+            if (miner.Name == "ethminer")
                 return new EthminerInstance(hardware, algorithm, rewardCoin, rewardAddress, ip, port);
 
             throw new ArgumentOutOfRangeException(nameof(miner), "The miner is not supported");
@@ -66,7 +67,7 @@ namespace MultiCryptoToolLib.Mining
 
         public CcminerInstance(IEnumerable<Hardware.Hardware> miningHardware, Algorithm algorithm,
             Coin rewardCoin, string rewardAddress, IPAddress ip, int port)
-            : base(Miner.CcMiner, miningHardware, algorithm, rewardCoin, rewardAddress)
+            : base(Miner.FromString("ccminer"), miningHardware, algorithm, rewardCoin, rewardAddress)
         {
             _ip = ip;
             _port = port;
@@ -110,7 +111,7 @@ namespace MultiCryptoToolLib.Mining
 
         public EthminerInstance(IEnumerable<Hardware.Hardware> miningHardware, Algorithm algorithm,
             Coin rewardCoin, string rewardAddress, IPAddress ip, int port)
-            : base(Miner.EthMiner, miningHardware, algorithm, rewardCoin, rewardAddress)
+            : base(Miner.FromString("ethminer"), miningHardware, algorithm, rewardCoin, rewardAddress)
         {
             _ip = ip;
             _port = port;
@@ -123,7 +124,7 @@ namespace MultiCryptoToolLib.Mining
                 var uri = $"stratum+tcp://{RewardCoin.ShortName}:{RewardAddress}@{_ip}:{_port}";
                 var parameter = $"-P {uri}";
                 
-                if (MiningHardware.FirstOrDefault().Type == HardwareType.Cuda)
+                if (MiningHardware.FirstOrDefault()?.Type == HardwareType.Cuda)
                     parameter += $"-U --cuda-devices {string.Join(" ", MiningHardware.Select(i => i.Index))} -a {Algorithm}";
 
                 Logger.Debug($"Starting {Miner.Path} {parameter}");

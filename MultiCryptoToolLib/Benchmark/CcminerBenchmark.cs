@@ -13,7 +13,7 @@ namespace MultiCryptoToolLib.Benchmark
     public class CcminerBenchmark : Benchmark
     {
         public CcminerBenchmark(Algorithm algorithm, Hardware miningHardware)
-            : base(Miner.CcMiner, algorithm, miningHardware)
+            : base(Miner.FromString("ccminer"), algorithm, miningHardware)
         {
         }
 

@@ -1,0 +1,354 @@
+{
+    "ETH": {
+        "name": "Ethereum",
+        "algorithm": "ethash"
+    },
+    "BCN": {
+        "name": "Bytecoin",
+        "algorithm": "cryptonight"
+    },
+    "BTG": {
+        "name": "Bitcoin Gold",
+        "algorithm": "equihash"
+    },
+    "DASH": {
+        "name": "Dash",
+        "algorithm": "x11"
+    },
+    "LTC": {
+        "name": "Litecoin",
+        "algorithm": "scrypt"
+    },
+    "ZEC": {
+        "name": "Zcash",
+        "algorithm": "equihash"
+    },
+    "XRM": {
+        "name": "Monero",
+        "algorithm": "cryptonight"
+    },
+    "AEON": {
+        "name": "Aeon",
+        "algorithm": "cryptonight-lite"
+    },
+    "BTX": {
+        "name": "Bitcore",
+        "algorithm": "timetravel"
+    },
+    "DATA": {
+        "name": "Datacoin",
+        "algorithm": "primecoin"
+    },
+    "DGB": {
+        "name": "Digibyte",
+        "algorithm": "multi"
+    },
+    "DOGE": {
+        "name": "Doge",
+        "algorithm": "scrypt"
+    },
+    "DSH": {
+        "name": "Dashcoin",
+        "algorithm": "cryptonight"
+    },
+    "ELE": {
+        "name": "Elementrem",
+        "algorithm": "ethash"
+    },
+    "ETC": {
+        "name": "Ethereum Classic",
+        "algorithm": "ethash"
+    },
+    "XVG": {
+        "name": "Verge",
+        "algorithm": "scrypt"
+    },
+    "SLS": {
+        "name": "Salus",
+        "algorithm": "not mineable"
+    },
+    "SC": {
+        "name": "Siacoin",
+        "algorithm": "blake"
+    },
+    "NEO": {
+        "name": "Neo",
+        "algorithm": "scrypt"
+    },
+    "GRS": {
+        "name": "Groestlcoin",
+        "algorithm": "groestl"
+    },
+    "ZEN": {
+        "name": "Zencash",
+        "algorithm": "equihash"
+    },
+    "UNB": {
+        "name": "Unbreakablecoin",
+        "algorithm": "sha256d"
+    },
+    "STRAT": {
+        "name": "Stratis",
+        "algorithm": "x13"
+    },
+    "VTC": {
+        "name": "Vertcoin",
+        "algorithm": "lyra2v2"
+    },
+    "FTC": {
+        "name": "Feathercoin",
+        "algorithm": "neoscrypt"
+    },
+    "RVR": {
+        "name": "Revolutionvr",
+        "algorithm": "scrypt"
+    },
+    "TX": {
+        "name": "Transfercoin",
+        "algorithm": "x11"
+    },
+    "MONA": {
+        "name": "Monacoin",
+        "algorithm": "lyra2v2"
+    },
+    "DCR": {
+        "name": "Decred",
+        "algorithm": "blake"
+    },
+    "KMD": {
+        "name": "Komodo",
+        "algorithm": "equihash"
+    },
+    "PIVX": {
+        "name": "Pivx",
+        "algorithm": "quark"
+    },
+    "SYS": {
+        "name": "Syscoin",
+        "algorithm": "sha256"
+    },
+    "BITB": {
+        "name": "Bitbean",
+        "algorithm": "scrypt"
+    },
+    "VIA": {
+        "name": "Viacoin",
+        "algorithm": "scrypt"
+    },
+    "BLK": {
+        "name": "Blackcoin",
+        "algorithm": "scrypt"
+    },
+    "ERC20": {
+        "name": "Einsteinium",
+        "algorithm": "scrypt"
+    },
+    "GBYTE": {
+        "name": "Bytes",
+        "algorithm": "cryptonight"
+    },
+    "XZC": {
+        "name": "Zcoin",
+        "algorithm": "lyra2v2"
+    },
+    "ZCL": {
+        "name": "Zclassic",
+        "algorithm": "equihash"
+    },
+    "NBT": {
+        "name": "Nubits",
+        "algorithm": "sha256"
+    },
+    "IOP": {
+        "name": "Internet Of People",
+        "algorithm": "sha256"
+    },
+    "NAV": {
+        "name": "Navcoin",
+        "algorithm": "x13"
+    },
+    "XCP": {
+        "name": "Counterparty",
+        "algorithm": "sha256"
+    },
+    "INCNT": {
+        "name": "Incent",
+        "algorithm": "incnt mining algo"
+    },
+    "MEME": {
+        "name": "Memetic",
+        "algorithm": "x11"
+    },
+    "EMC": {
+        "name": "Emercoin",
+        "algorithm": "sha256"
+    },
+    "POT": {
+        "name": "Potcoin",
+        "algorithm": "scrypt"
+    },
+    "MUE": {
+        "name": "Monetaryunit",
+        "algorithm": "x11"
+    },
+    "KORE": {
+        "name": "Kore",
+        "algorithm": "x13"
+    },
+    "MUSIC": {
+        "name": "Musicoin",
+        "algorithm": "ethash"
+    },
+    "THC": {
+        "name": "Hempcoin",
+        "algorithm": "scrypt-n"
+    },
+    "SEQ": {
+        "name": "Sequence",
+        "algorithm": "scrypt"
+    },
+    "NLG": {
+        "name": "Gulden",
+        "algorithm": "scrypt"
+    },
+    "XWC": {
+        "name": "Whitecoin",
+        "algorithm": "scrypt"
+    },
+    "NEOS": {
+        "name": "Neoscoin",
+        "algorithm": "sha256"
+    },
+    "CANN": {
+        "name": "Cannabiscoin",
+        "algorithm": "x11"
+    },
+    "CLOAK": {
+        "name": "Cloakcoin",
+        "algorithm": "x13"
+    },
+    "ABY": {
+        "name": "Artbyte",
+        "algorithm": "scrypt"
+    },
+    "EXP": {
+        "name": "Expanse",
+        "algorithm": "ethash"
+    },
+    "BSD": {
+        "name": "Bitsend",
+        "algorithm": "xevan"
+    },
+    "VRC": {
+        "name": "Vericoin",
+        "algorithm": "scrypt"
+    },
+    "IOC": {
+        "name": "I/Ocoin",
+        "algorithm": "x11"
+    },
+    "PPC": {
+        "name": "Peercoin",
+        "algorithm": "sha256"
+    },
+    "DOPE": {
+        "name": "Dopecoin",
+        "algorithm": "scrypt"
+    },
+    "GRC": {
+        "name": "Gridcoin",
+        "algorithm": "scrypt"
+    },
+    "SPHR": {
+        "name": "Sphere",
+        "algorithm": "scrypt"
+    },
+    "GLD": {
+        "name": "Goldcoin",
+        "algorithm": "scrypt"
+    },
+    "EBST": {
+        "name": "Eboost",
+        "algorithm": "scrypt"
+    },
+    "SPR": {
+        "name": "Spreadcoin",
+        "algorithm": "spreadx11"
+    },
+    "CURE": {
+        "name": "Curecoin",
+        "algorithm": "sha256"
+    },
+    "PINK": {
+        "name": "Pinkcoin",
+        "algorithm": "scrypt"
+    },
+    "GEO": {
+        "name": "Geocoin",
+        "algorithm": "qubit"
+    },
+    "FLO": {
+        "name": "Florin",
+        "algorithm": "scrypt"
+    },
+    "LMC": {
+        "name": "Lomocoin",
+        "algorithm": "scrypt"
+    },
+    "CRW": {
+        "name": "Crown",
+        "algorithm": "sha256"
+    },
+    "VTR": {
+        "name": "Vtorrent",
+        "algorithm": "scrypt"
+    },
+    "OMNI": {
+        "name": "Omni",
+        "algorithm": "scrypt"
+    },
+    "DMD": {
+        "name": "Diamond",
+        "algorithm": "groestl"
+    },
+    "SLR": {
+        "name": "Solarcoin",
+        "algorithm": "scrypt"
+    },
+    "PTC": {
+        "name": "Pesetacoin",
+        "algorithm": "scrypt"
+    },
+    "XST": {
+        "name": "Stealthcoin",
+        "algorithm": "x13"
+    },
+    "2GIVE": {
+        "name": "2Give",
+        "algorithm": "scrypt"
+    },
+    "GAM": {
+        "name": "Gambit",
+        "algorithm": "scrypt"
+    },
+    "ERC": {
+        "name": "Europecoin",
+        "algorithm": "cryptonight"
+    },
+    "EFL": {
+        "name": "Electronicgulden",
+        "algorithm": "scrypt"
+    },
+    "RBY": {
+        "name": "Rubycoin",
+        "algorithm": "scrypt"
+    },
+    "SNRG": {
+        "name": "Synergy",
+        "algorithm": "x11"
+    },
+    "EGC": {
+        "name": "Evergreencoin",
+        "algorithm": "x15"
+    }
+}
