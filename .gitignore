@@ -264,3 +264,5 @@ MultiMinerConsole/benchmarks/
 MultiMinerConsole/miner/
 MultiMinerConsole/utils/
 
+/MultiMinerConsole/Properties/launchSettings.json
+/miner
