@@ -26,7 +26,7 @@ namespace MultiCryptoToolLib.Mining
 
     public class MultiMinerBase
     {
-        private CancellationToken _ctx;
+        private readonly CancellationToken _ctx;
         private IList<Hardware.Hardware> _hardware;
         private IList<Miner> _miner;
         private IPAddress _proxy;
@@ -39,10 +39,10 @@ namespace MultiCryptoToolLib.Mining
         public event Action<IPAddress> ProxyFound;
 
         public Uri Uri { get; }
-        public Coin Coin { get; }
+        public string Coin { get; }
         public string Address { get; }
 
-        public MultiMinerBase(Uri serverUri, Coin coin, string address, CancellationToken ctx)
+        public MultiMinerBase(Uri serverUri, string coin, string address, CancellationToken ctx)
         {
             Uri = serverUri;
             Coin = coin;
@@ -157,7 +157,7 @@ namespace MultiCryptoToolLib.Mining
         private async Task<(IPAddress ip, IDictionary<Coin, int> ports)> GetProxyAndPorts()
         {
             var ip = await GetFastestProxy();
-            var portsUri = new Uri($"http://{ip.Item1}/coins");
+            var portsUri = new Uri($"http://{ip.Item1}/mineableCoins");
             var ports = await new PortLoader(portsUri).LoadAsync(_ctx);
             return (ip.Item1, ports);
         }
@@ -199,9 +199,10 @@ namespace MultiCryptoToolLib.Mining
             var hardware = new List<Hardware.Hardware>();
             var cudaGpus = new CudaLoader().LoadAsync(_ctx);
             var openclGpus = new OpenClLoader().LoadAsync(_ctx);
-                    
-            hardware.AddRange(cudaGpus.Result);
-            hardware.AddRange(openclGpus.Result);
+
+            hardware.AddRange(cudaGpus.Result.Any() ? cudaGpus.Result : openclGpus.Result);
+            //hardware.AddRange(cudaGpus.Result);
+            //hardware.AddRange(openclGpus.Result);
             
             var sb = new StringBuilder();
             sb.AppendLine("Found hardware:");
@@ -243,7 +244,7 @@ namespace MultiCryptoToolLib.Mining
             {
                 Logger.Info($"Benchmarking {a} on {h} with {m}");
                 if (!benchmarkFiles[m].HashRates.ContainsKey(h))
-                    benchmarkFiles[m].HashRates.Add(h, new Dictionary<Algorithm, HashRate>());
+                    benchmarkFiles[m].HashRates.Add(h, new Dictionary<string, HashRate>());
                 var result = Benchmark.Benchmark.Create(m, a, h).Load(_ctx);
                 benchmarkFiles[m].HashRates[h].Add(a, result);
                 Logger.Info($"Benchmarked {a} on {h} with {m}: {result}");
@@ -299,6 +300,9 @@ namespace MultiCryptoToolLib.Mining
                         if (h.Value.ContainsKey(a))
                         {
                             var profit = c.Profitability * h.Value[a].Value;
+
+                            if (!bestHardwareAlgorithms.ContainsKey(h.Key))
+                                continue;
 
                             if (bestHardwareAlgorithms[h.Key] == null ||
                                 bestHardwareAlgorithms[h.Key].Profit < profit)

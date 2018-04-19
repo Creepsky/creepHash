@@ -10,10 +10,10 @@ namespace MultiCryptoToolLib.Benchmark
     public abstract class Benchmark : ILoaderAsync<HashRate>
     {
         public Miner Miner { get; }
-        public Algorithm Algorithm { get; }
+        public string Algorithm { get; }
         public Hardware MiningHardware { get; }
 
-        protected Benchmark(Miner miner, Algorithm algorithm, Hardware miningHardware)
+        protected Benchmark(Miner miner, string algorithm, Hardware miningHardware)
         {
             Miner = miner;
             Algorithm = algorithm;
@@ -33,7 +33,7 @@ namespace MultiCryptoToolLib.Benchmark
         protected abstract HashRate Run(CancellationToken cancel);
         protected abstract Task<HashRate> RunAsync(CancellationToken cancel);
 
-        public static Benchmark Create(Miner miner, Algorithm algorithm, Hardware hardware)
+        public static Benchmark Create(Miner miner, string algorithm, Hardware hardware)
         {
             if (miner.Name == "ccminer")
                 return new CcminerBenchmark(algorithm, hardware);

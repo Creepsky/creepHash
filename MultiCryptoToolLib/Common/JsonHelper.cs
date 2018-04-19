@@ -17,8 +17,8 @@ namespace MultiCryptoToolLib.Common
             new JProperty("type", hardware.Type),
         };
 
-        public static JProperty ToJson(this Algorithm algorithm, HashRate hashRate) =>
-            new JProperty(algorithm.Name, hashRate.Convert(Metric.Unit).Value);
+        public static JProperty ToJson(this string algorithm, HashRate hashRate) =>
+            new JProperty(algorithm, hashRate.Convert(Metric.Unit).Value);
 
         public static void FromJson(JToken json, out Hardware hardware)
         {
@@ -34,10 +34,10 @@ namespace MultiCryptoToolLib.Common
             };
         }
 
-        public static void FromJson(JToken json, out Algorithm algorithm, out HashRate hashRate)
+        public static void FromJson(JToken json, out string algorithm, out HashRate hashRate)
         {
             var jsonProperty = (JProperty)json;
-            algorithm = Algorithm.FromString(jsonProperty.Name);
+            algorithm = jsonProperty.Name;
             hashRate = new HashRate(jsonProperty.Value.Value<double>(), Metric.Unit);
         }
 

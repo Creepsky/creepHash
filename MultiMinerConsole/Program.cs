@@ -17,12 +17,11 @@ namespace MultiMinerConsole
                 return Usage();
             }
 
-            Algorithm.LoadFromJson("confs/algorithms.json");
             Coin.LoadFromJson("confs/coins.json");
             Miner.LoadFromJson("confs/miner.json");
 
             var uri = default(Uri);
-            var coin = default(Coin);
+            var coin = string.Empty;
             var address = string.Empty;
 
             foreach (var i in args)
@@ -43,7 +42,7 @@ namespace MultiMinerConsole
                     if (key == "-uri")
                         uri = new Uri(value);
                     else if (key == "-coin")
-                        coin = Coin.FromString(value);
+                        coin = value;
                     else if (key == "-address")
                         address = value;
                     else

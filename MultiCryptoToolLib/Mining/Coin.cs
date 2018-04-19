@@ -30,9 +30,9 @@ namespace MultiCryptoToolLib.Mining
         /// <summary>
         /// The hash algorithm that is used to mine the coin
         /// </summary>
-        public Algorithm Algorithm { get; }
+        public string Algorithm { get; }
 
-        public Coin(string name, string shortName, Algorithm algorithm)
+        public Coin(string name, string shortName, string algorithm)
         {
             Name = name;
             ShortName = shortName;
@@ -55,7 +55,7 @@ namespace MultiCryptoToolLib.Mining
                 var shortName = token.Key;
                 var name = token.Value["name"].Value<string>();
                 var algorithm = token.Value["algorithm"].Value<string>();
-                Coins.Add(new Coin(name, shortName, Algorithm.FromString(algorithm)));
+                Coins.Add(new Coin(name, shortName, algorithm));
             }
         }
 

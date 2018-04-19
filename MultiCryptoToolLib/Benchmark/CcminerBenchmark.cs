@@ -12,7 +12,7 @@ namespace MultiCryptoToolLib.Benchmark
 {
     public class CcminerBenchmark : Benchmark
     {
-        public CcminerBenchmark(Algorithm algorithm, Hardware miningHardware)
+        public CcminerBenchmark(string algorithm, Hardware miningHardware)
             : base(Miner.FromString("ccminer"), algorithm, miningHardware)
         {
         }
@@ -26,7 +26,7 @@ namespace MultiCryptoToolLib.Benchmark
 
             var lines = ProcessHelper.ReadLines(
                 Miner.Path,
-                $"--algo={Algorithm.Name} --benchmark --no-color --quiet --devices={MiningHardware.Index} --time-limit 15",
+                $"--algo={Algorithm} --benchmark --no-color --quiet --devices={MiningHardware.Index} --time-limit 15",
                 cancel
             );
 

@@ -13,7 +13,7 @@ namespace MultiCryptoToolLib.Benchmark.File
 {
     public class BenchmarkFileJson : IBenchmarkFile
     {
-        public IDictionary<Hardware, IDictionary<Algorithm, HashRate>> HashRates { get; set; }
+        public IDictionary<Hardware, IDictionary<string, HashRate>> HashRates { get; set; }
         public string Path { get; }
 
         public BenchmarkFileJson(string path)
@@ -43,9 +43,9 @@ namespace MultiCryptoToolLib.Benchmark.File
             System.IO.File.WriteAllText(Path, hashRatesJson.ToString(Formatting.Indented));
         }
 
-        public IDictionary<Hardware, IDictionary<Algorithm, HashRate>> Load(CancellationToken ctx)
+        public IDictionary<Hardware, IDictionary<string, HashRate>> Load(CancellationToken ctx)
         {
-            HashRates = new Dictionary<Hardware, IDictionary<Algorithm, HashRate>>();
+            HashRates = new Dictionary<Hardware, IDictionary<string, HashRate>>();
             
             if (System.IO.File.Exists(Path))
             {
@@ -57,7 +57,7 @@ namespace MultiCryptoToolLib.Benchmark.File
                     {
                         var hashRateJson = (JObject)hashRatesJson;
                         var hardwareJson = hashRateJson.Value<JObject>("device");
-                        var hashRates = new Dictionary<Algorithm, HashRate>();
+                        var hashRates = new Dictionary<string, HashRate>();
 
                         JsonHelper.FromJson(hardwareJson, out var hardware);
 

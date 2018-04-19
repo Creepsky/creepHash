@@ -7,11 +7,11 @@ namespace MultiCryptoToolLib.Network.Algorithm
 {
     public interface IAlgorithmLoader
     {
-        IDictionary<Mining.Algorithm, Uri> Load(CancellationToken cancel);
+        IDictionary<string, Uri> Load(CancellationToken cancel);
     }
 
     public interface IAlgorithLoaderAsync : IAlgorithmLoader
     {
-        Task<IDictionary<Mining.Algorithm, Uri>> LoadAsync(CancellationToken cancel);
+        Task<IDictionary<string, Uri>> LoadAsync(CancellationToken cancel);
     }
 }

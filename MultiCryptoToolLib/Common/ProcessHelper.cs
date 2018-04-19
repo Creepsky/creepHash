@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using MultiCryptoToolLib.Common.Logging;
 
 namespace MultiCryptoToolLib.Common
 {
@@ -30,9 +32,16 @@ namespace MultiCryptoToolLib.Common
                 { // do nothing
                     cancellationToken.WaitHandle.WaitOne(100);
                 }
-                process.Kill();
-            }, cancellationToken);
 
+                try
+                {
+                    process.Kill();
+                }
+                catch (Exception e)
+                {
+                    Logger.Debug($"Could not kill the process {path}: {e}");
+                }
+            }, cancellationToken);
 
             while (!process.StandardOutput.EndOfStream)
             {

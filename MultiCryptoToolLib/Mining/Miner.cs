@@ -18,11 +18,11 @@ namespace MultiCryptoToolLib.Mining
 
         public string Path => $"miner/{Name}{Filename.GetFileExtensionOs()}";
 
-        public ISet<Algorithm> Algorithms { get; }
+        public ISet<string> Algorithms { get; }
 
         public ISet<HardwareType> HardwareTypes { get; }
 
-        public Miner(string name, string version, ISet<HardwareType> hardwareTypes, ISet<Algorithm> algorithms)
+        public Miner(string name, string version, ISet<HardwareType> hardwareTypes, ISet<string> algorithms)
         {
             Name = name;
             Version = version;
@@ -56,7 +56,7 @@ namespace MultiCryptoToolLib.Mining
                             throw new KeyNotFoundException($"Invalid hardware {i} for miner {name}");
                     }
                 }));
-                var algorithms = new HashSet<Algorithm>(token.Value["algorithms"].Values<string>().Select(Algorithm.FromString));
+                var algorithms = new HashSet<string>(token.Value["algorithms"].Values<string>());
 
                 Miners.Add(new Miner(name, version, hardware, algorithms));
             }

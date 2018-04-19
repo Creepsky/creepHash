@@ -17,7 +17,7 @@ namespace MultiCryptoToolLib.Network.Algorithm
             _uri = uri;
         }
 
-        public IDictionary<Mining.Algorithm, Uri> Load(CancellationToken cancel)
+        public IDictionary<string, Uri> Load(CancellationToken cancel)
         {
             using (var w = new WebClient())
             {
@@ -28,7 +28,7 @@ namespace MultiCryptoToolLib.Network.Algorithm
             }
         }
 
-        public async Task<IDictionary<Mining.Algorithm, Uri>> LoadAsync(CancellationToken cancel)
+        public async Task<IDictionary<string, Uri>> LoadAsync(CancellationToken cancel)
         {
             using (var w = new WebClient())
             {
