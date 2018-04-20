@@ -10,39 +10,39 @@ using MultiCryptoToolLib.Common;
 
 namespace MultiCryptoToolLib.Network
 {
-    public class PingTest : PeriodicTask<(IPAddress, TimeSpan)>
+    public class PingTest : PeriodicTask<(Uri, TimeSpan)>
     {
-        private readonly IEnumerable<IPAddress> _ips;
+        private readonly IEnumerable<Uri> _uris;
 
-        public PingTest(IEnumerable<IPAddress> ips, CancellationToken ctx, TimeSpan tick)
+        public PingTest(IEnumerable<Uri> uris, CancellationToken ctx, TimeSpan tick)
             : base(tick, ctx)
         {
-            _ips = ips;
+            _uris = uris;
         }
 
-        protected override (IPAddress, TimeSpan) Run() => GetBestPing(_ips).Result;
+        protected override (Uri, TimeSpan) Run() => GetBestPing(_uris).Result;
 
-        public static TimeSpan SendPing(IPAddress ip)
+        public static TimeSpan SendPing(Uri uri)
         {
             var ping = new Ping();
             var stopWatch = Stopwatch.StartNew();
-            ping.Send(ip);
+            ping.Send(uri.Host);
             return stopWatch.Elapsed;
         }
 
-        public static Task<IDictionary<IPAddress, TimeSpan>> SendPing(IEnumerable<IPAddress> ips)
+        public static Task<IDictionary<Uri, TimeSpan>> SendPing(IEnumerable<Uri> uris)
         {
             return Task.Run(() =>
             {
-                return ips.ToDictionary(i => i, SendPing) as IDictionary<IPAddress, TimeSpan>;
+                return uris.ToDictionary(i => i, SendPing) as IDictionary<Uri, TimeSpan>;
             });
         }
 
-        public static async Task<(IPAddress, TimeSpan)> GetBestPing(IEnumerable<IPAddress> ips)
+        public static async Task<(Uri, TimeSpan)> GetBestPing(IEnumerable<Uri> ips)
         {
             var times = await SendPing(ips);
 
-            (IPAddress ip, TimeSpan time) best = (null, TimeSpan.MaxValue);
+            (Uri ip, TimeSpan time) best = (null, TimeSpan.MaxValue);
 
             foreach (var j in times)
                 if (best.ip == null || best.time > j.Value)

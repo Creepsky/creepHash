@@ -8,7 +8,7 @@ using Newtonsoft.Json.Linq;
 
 namespace MultiCryptoToolLib.Network.Proxy
 {
-    public class ProxyUriLoader : ILoaderAsync<IList<IPAddress>>
+    public class ProxyUriLoader : ILoaderAsync<IList<Uri>>
     {
         private readonly Uri _uri;
 
@@ -17,7 +17,7 @@ namespace MultiCryptoToolLib.Network.Proxy
             _uri = uri;
         }
 
-        public IList<IPAddress> Load(CancellationToken ctx)
+        public IList<Uri> Load(CancellationToken ctx)
         {
             using (var w = new WebClient())
             {
@@ -26,7 +26,7 @@ namespace MultiCryptoToolLib.Network.Proxy
             }
         }
 
-        public async Task<IList<IPAddress>> LoadAsync(CancellationToken ctx)
+        public async Task<IList<Uri>> LoadAsync(CancellationToken ctx)
         {
             using (var w = new WebClient())
             {
@@ -35,13 +35,13 @@ namespace MultiCryptoToolLib.Network.Proxy
             }
         }
 
-        private static IList<IPAddress> ParseIps(string content)
+        private static IList<Uri> ParseIps(string content)
         {
             var json = JArray.Parse(content);
-            var collection = new List<IPAddress>();
+            var collection = new List<Uri>();
 
             foreach (var j in json)
-                collection.Add(IPAddress.Parse(j.Value<string>()));
+                collection.Add(new Uri(j.Value<string>()));
 
             return collection;
         }

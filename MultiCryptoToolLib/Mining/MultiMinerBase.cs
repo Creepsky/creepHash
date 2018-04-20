@@ -29,14 +29,14 @@ namespace MultiCryptoToolLib.Mining
         private readonly CancellationToken _ctx;
         private IList<Hardware.Hardware> _hardware;
         private IList<Miner> _miner;
-        private IPAddress _proxy;
+        private Uri _proxy;
         private IDictionary<Miner, IBenchmarkFile> _benchmarks;
         private readonly IList<MiningInstance> _miningInstances = new List<MiningInstance>();
 
         public event Action<IList<Miner>> MinerLoaded;
         public event Action<IList<Hardware.Hardware>> HardwareLoaded;
         public event Action<IDictionary<Miner, IBenchmarkFile>> BenchmarksLoaded;
-        public event Action<IPAddress> ProxyFound;
+        public event Action<Uri> ProxyFound;
 
         public Uri Uri { get; }
         public string Coin { get; }
@@ -79,7 +79,7 @@ namespace MultiCryptoToolLib.Mining
 
                 proxy.ContinueWith(i =>
                 {
-                    _proxy = i.Result.ip;
+                    _proxy = i.Result.uri;
                     ProxyFound?.Invoke(_proxy);
                 }, _ctx);
 
@@ -140,7 +140,7 @@ namespace MultiCryptoToolLib.Mining
         //    return await _loginManager.Login(user, pass);
         //}
 
-        private async Task<(IPAddress, TimeSpan)> GetFastestProxy()
+        private async Task<(Uri, TimeSpan)> GetFastestProxy()
         {
             var proxyListLoader = new ProxyUriLoader(new Uri(Uri, "network"));
             var ips = await proxyListLoader.LoadAsync(_ctx);
@@ -154,14 +154,31 @@ namespace MultiCryptoToolLib.Mining
             return fastest;
         }
 
-        private async Task<(IPAddress ip, IDictionary<Coin, int> ports)> GetProxyAndPorts()
+        private async Task<(Uri uri, IDictionary<Coin, int> ports)> GetProxyAndPorts()
         {
-            var ip = await GetFastestProxy();
-            var portsUri = new Uri($"http://{ip.Item1}/mineableCoins");
-            var ports = await new PortLoader(portsUri).LoadAsync(_ctx);
-            return (ip.Item1, ports);
-        }
+            try
+            {
+                var uri = await GetFastestProxy();
 
+                try
+                {
+                    var portsUri = new Uri(uri.Item1, "/mineableCoins");
+                    var ports = await new PortLoader(portsUri).LoadAsync(_ctx);
+                    return (uri.Item1, ports);
+                }
+                catch (Exception e)
+                {
+                    Logger.Exception("Error while loading the coin ports", e);
+                    throw;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Exception("Error while loading the network IPs", e);
+                throw;
+            }
+        }
+        
         private Task<IList<Miner>> LoadMiner()
         {
             var miner = new List<Miner>
@@ -332,14 +349,14 @@ namespace MultiCryptoToolLib.Mining
 
         private async Task RunMiningInstancesAsync(
             Task<HardwareMinerProfit> bestAlgorithmsTask,
-            Task<(IPAddress ip, IDictionary<Coin, int> ports)> proxyTask)
+            Task<(Uri uri, IDictionary<Coin, int> ports)> proxyTask)
         {
             try
             {
                 var bestAlgorithms = await bestAlgorithmsTask;
-                var (ip, ports) = await proxyTask;
+                var (uri, ports) = await proxyTask;
 
-                if (bestAlgorithms.Values.All(i => i == null) || ip == null || !ports.Any())
+                if (bestAlgorithms.Values.All(i => i == null) || uri == null || !ports.Any())
                 {
                     Logger.Warning("Nothing to mine...");
                     return;
@@ -376,7 +393,7 @@ namespace MultiCryptoToolLib.Mining
                             new[] {ba.Key},
                             ba.Value.Key.Algorithm,
                             Coin, Address,
-                            ip, ports[ba.Value.Key]);
+                            IPAddress.Parse(uri.Host), ports[ba.Value.Key]);
 
 #pragma warning disable 4014
                         miningInstance.RunAsync(_ctx);
