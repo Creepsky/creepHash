@@ -121,8 +121,7 @@ namespace MultiCryptoToolLib.Mining
         {
             try
             {
-                var uri = $"stratum+tcp://{RewardCoin}:{RewardAddress}@{_ip}:{_port}";
-                var parameter = $"-P {uri} ";
+                var parameter = $"--farm recheck 200 -S {_ip}:{_port} -u {RewardCoin}:{RewardAddress}";
 
                 if (MiningHardware.FirstOrDefault()?.Type == HardwareType.Cuda)
                 {
