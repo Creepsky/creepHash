@@ -10,4 +10,8 @@
     <ProjectReference Include="..\MultiCryptoToolLib\MultiCryptoToolLib.csproj" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <RuntimeIdentifiers>win10-x64;ubuntu.16.10-x64</RuntimeIdentifiers>
+  </PropertyGroup>
+
 </Project>
