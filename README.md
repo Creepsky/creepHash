@@ -2,7 +2,7 @@
 
 Please note we're currently in Beta and the system is not 100% perfect yet. Give us your feedback so we can make it better.
 
-Go to freedomhash.com and download the Miner. 
+Go to freedomhash.com and download the latest Miner (https://github.com/Creepsky/freeHash/releases). 
 
 Select the Coin you wish to be paid in on the website and insert your address there.
 
