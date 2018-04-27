@@ -61,24 +61,28 @@ namespace MultiCryptoToolLib.Mining
 
                 hardware.ContinueWith(i =>
                 {
+                    if (i.Status != TaskStatus.RanToCompletion) return;
                     _hardware = i.Result;
                     HardwareLoaded?.Invoke(_hardware);
                 }, _ctx);
 
                 miner.ContinueWith(i =>
                 {
+                    if (i.Status != TaskStatus.RanToCompletion) return;
                     _miner = i.Result;
                     MinerLoaded?.Invoke(_miner);
                 }, _ctx);
 
                 benchmarks.ContinueWith(i =>
                 {
+                    if (i.Status != TaskStatus.RanToCompletion) return;
                     _benchmarks = i.Result;
                     BenchmarksLoaded?.Invoke(_benchmarks);
                 }, _ctx);
 
                 proxy.ContinueWith(i =>
                 {
+                    if (i.Status != TaskStatus.RanToCompletion) return;
                     _proxy = i.Result.uri;
                     ProxyFound?.Invoke(_proxy);
                 }, _ctx);
@@ -100,11 +104,9 @@ namespace MultiCryptoToolLib.Mining
                     }
                     catch (OperationCanceledException e)
                     {
-                        if (!e.CancellationToken.IsCancellationRequested)
-                        {
-                            Logger.Exception("The mining instance(s) stopped", e);
-                            _ctx.WaitHandle.WaitOne(TimeSpan.FromSeconds(5));
-                        }
+                        if (e.CancellationToken.IsCancellationRequested) continue;
+                        Logger.Exception("The mining instance(s) stopped", e);
+                        _ctx.WaitHandle.WaitOne(TimeSpan.FromSeconds(5));
                     }
                     catch (Exception e)
                     {
@@ -140,25 +142,52 @@ namespace MultiCryptoToolLib.Mining
         //    return await _loginManager.Login(user, pass);
         //}
 
-        private async Task<(Uri, TimeSpan)> GetFastestProxy()
+        private async Task<(Uri, TimeSpan)> GetFastestServer()
         {
-            var proxyListLoader = new ProxyUriLoader(new Uri(Uri, "network"));
-            var ips = await proxyListLoader.LoadAsync(_ctx);
-            var sb = new StringBuilder();
-            sb.AppendLine("Available proxys:");
-            foreach (var i in ips)
-                sb.AppendLine($"- {i}");
-            Logger.Info(sb.ToString());
-            var fastest = await PingTest.GetBestPing(ips);
-            Logger.Info($"Fastest proxy: {fastest.Item1} -> {(int)fastest.Item2.TotalMilliseconds} ms");
-            return fastest;
+            try
+            {
+                IList<Uri> uris;
+
+                try
+                {
+                    var proxyListLoader = new ProxyUriLoader(new Uri(Uri, "network"));
+                    uris = await proxyListLoader.LoadAsync(_ctx);
+                }
+                catch (Exception e)
+                {
+                    throw new Exception("Could not get the server network", e);
+                }
+
+                var sb = new StringBuilder();
+                sb.AppendLine("Available server:");
+
+                foreach (var i in uris)
+                    sb.AppendLine($"- {i}");
+
+                Logger.Info(sb.ToString());
+
+                try
+                {
+                    var fastest = await PingTest.GetBestPing(uris);
+                    Logger.Info($"Fastest server: {fastest.Item1} -> {(int)fastest.Item2.TotalMilliseconds} ms");
+                    return fastest;
+                }
+                catch (Exception e)
+                {
+                    throw new Exception("Error while doing the ping speed test", e);
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Could not determine the fastest proxy", e);
+            }
         }
 
         private async Task<(Uri uri, IDictionary<Coin, int> ports)> GetProxyAndPorts()
         {
             try
             {
-                var uri = await GetFastestProxy();
+                var uri = await GetFastestServer();
 
                 try
                 {
@@ -168,47 +197,52 @@ namespace MultiCryptoToolLib.Mining
                 }
                 catch (Exception e)
                 {
-                    Logger.Exception("Error while loading the coin ports", e);
-                    throw;
+                    throw new Exception("Error while loading the coin ports", e);
                 }
             }
             catch (Exception e)
             {
-                Logger.Exception("Error while loading the network IPs", e);
-                throw;
+                throw new Exception("Error while loading the network IPs", e);
             }
         }
         
         private Task<IList<Miner>> LoadMiner()
         {
-            var miner = new List<Miner>
+            try
             {
-                Miner.FromString("ccminer"),
-                Miner.FromString("ethminer")
-            };
-
-            var loadedMiner = new List<Miner>();
-
-            var sb = new StringBuilder();
-            sb.AppendLine("Found miner:");
-
-            foreach (var m in miner)
-            {
-                if (File.Exists(m.Path))
+                var miner = new List<Miner>
                 {
-                    sb.AppendLine($"- {m}");
-                    loadedMiner.Add(m);
+                    Miner.FromString("ccminer"),
+                    Miner.FromString("ethminer")
+                };
+
+                var loadedMiner = new List<Miner>();
+
+                var sb = new StringBuilder();
+                sb.AppendLine("Found miner:");
+
+                foreach (var m in miner)
+                {
+                    if (File.Exists(m.Path))
+                    {
+                        sb.AppendLine($"- {m}");
+                        loadedMiner.Add(m);
+                    }
+                    else
+                        Logger.Warning($"Could not load {m}");
                 }
-                else
-                    Logger.Warning($"Could not load {m}");
+
+                Logger.Info(sb.ToString());
+
+                _miner = loadedMiner;
+                MinerLoaded?.Invoke(_miner);
+
+                return Task.FromResult((IList<Miner>)loadedMiner);
             }
-
-            Logger.Info(sb.ToString());
-
-            _miner = loadedMiner;
-            MinerLoaded?.Invoke(_miner);
-
-            return Task.FromResult((IList<Miner>)loadedMiner);
+            catch (Exception e)
+            {
+                throw new Exception("Could not load the miner", e);
+            }
         }
 
         private Task<IList<Hardware.Hardware>> LoadHardware()
@@ -216,20 +250,48 @@ namespace MultiCryptoToolLib.Mining
             var hardware = new List<Hardware.Hardware>();
             var cudaGpus = new CudaLoader().LoadAsync(_ctx);
             var openclGpus = new OpenClLoader().LoadAsync(_ctx);
-
-            hardware.AddRange(cudaGpus.Result.Any() ? cudaGpus.Result : openclGpus.Result);
-            //hardware.AddRange(cudaGpus.Result);
-            //hardware.AddRange(openclGpus.Result);
             
-            var sb = new StringBuilder();
-            sb.AppendLine("Found hardware:");
+            try
+            {
+                ISet<Hardware.Hardware> cudaDevices;
+                ISet<Hardware.Hardware> openclDevices;
 
-            foreach (var h in hardware)
-                sb.AppendLine($"- {h}");
+                try
+                {
+                    cudaDevices = cudaGpus.Result;
+                }
+                catch (Exception e)
+                {
+                    throw new Exception("Could not load CUDA devices", e);
+                }
 
-            Logger.Info(sb.ToString());
+                try
+                {
+                    openclDevices = openclGpus.Result;
+                }
+                catch (Exception e)
+                {
+                    throw new Exception("Could not load OpenCL devices", e);
+                }
 
-            return Task.FromResult((IList<Hardware.Hardware>)hardware);
+                hardware.AddRange(cudaDevices.Any() ? cudaDevices : openclDevices);
+                //hardware.AddRange(cudaGpus.Result);
+                //hardware.AddRange(openclGpus.Result);
+            
+                var sb = new StringBuilder();
+                sb.AppendLine("Found hardware:");
+
+                foreach (var h in hardware)
+                    sb.AppendLine($"- {h}");
+
+                Logger.Info(sb.ToString());
+
+                return Task.FromResult((IList<Hardware.Hardware>)hardware);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Could not load the mining hardware", e);
+            }
         }
 
         private async Task<IDictionary<Miner, IBenchmarkFile>> LoadBenchmarksAsync(Task<IList<Miner>> minerTask,
@@ -353,6 +415,7 @@ namespace MultiCryptoToolLib.Mining
         {
             try
             {
+
                 var bestAlgorithms = await bestAlgorithmsTask;
                 var (uri, ports) = await proxyTask;
 
@@ -406,8 +469,7 @@ namespace MultiCryptoToolLib.Mining
             }
             catch (Exception e)
             {
-                Logger.Exception("Could not run the mining instances", e);
-                throw;
+                throw new Exception("Could not run the mining instances", e);
             }
         }
 

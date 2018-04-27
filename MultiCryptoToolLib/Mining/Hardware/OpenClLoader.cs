@@ -39,11 +39,11 @@ namespace MultiCryptoToolLib.Mining.Hardware
             new HashSet<Hardware>(strings.Select(i =>
             {
                 var tokens = i.Split(';');
-                var platformIndex = int.Parse(tokens[0]);
+                var platformIndex = int.Parse(tokens[1]);
 
                 return new Hardware
                 {
-                    Index = int.Parse(tokens[1]),
+                    Index = int.Parse(tokens[0]),
                     Name = tokens[2],
                     PlatformIndex = platformIndex,
                     Platform = platforms[platformIndex],

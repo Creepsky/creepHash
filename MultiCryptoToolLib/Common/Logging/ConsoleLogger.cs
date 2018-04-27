@@ -60,11 +60,11 @@ namespace MultiCryptoToolLib.Common.Logging
                 foreach (var messageLine in message.Split(new [] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
                     LogUnsafe(messageLine, file, line, ConsoleColor.Red);
 
-                foreach (var messageLine in exception.Message.Split(new [] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
+                foreach (var messageLine in exception.ToString().Split(new [] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
                     LogUnsafe(messageLine, file, line, ConsoleColor.Red);
 
-                foreach (var messageLine in exception.StackTrace.Split(new [] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
-                    LogUnsafe(messageLine, file, line, ConsoleColor.DarkGray);
+                //foreach (var messageLine in exception.StackTrace.Split(new [] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
+                //    LogUnsafe(messageLine, file, line, ConsoleColor.DarkGray);
             }
         }
 
