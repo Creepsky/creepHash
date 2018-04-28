@@ -1,29 +1,31 @@
-# freedomhash Miner
+# creepHash Miner
 
-Please note we're currently in Beta and the system is not 100% perfect yet. Give us your feedback so we can make it better.
+Please note we're currently in **Beta** state and you could experience difficulties and issues. Please give us your feedback in the issue section of this site, so we can fix it as soon as possible.
 
-Go to freedomhash.com and download the latest Miner (https://github.com/Creepsky/freeHash/releases). 
+## Installation
 
-Select the Coin you wish to be paid in on the website and insert your address there.
+1. Go to freedomhash.com
+2. Select the coin you wish to be paid in
+3. Enter your address - be careful, there is no check included!
+4. Download the [latest Miner](https://github.com/Creepsky/creepHash/releases)
+5. Copy and run the command that is shown
 
-It will give you the command to run the Miner. 
-You can start it directly via Commandline by cd /thefolderwhereyoulocatedtheminerin
-or create a bat file and copy that line into the bat file.
+The command should look like this:
 
-As example your Command should look like this:
+`creepHash.exe -uri=http://5.39.93.90:3000 -coin=ETH -address=0x15042494c1e0f78bc344f43c2de2252e1bfcacae`
 
-multiMiner.exe.exe -uri=http://5.39.93.90 -coin=ETH -address=0x15042494c1e0f78bc344f43c2de2252e1bfcacae -U/-G
+## Run the miner
 
-The miner will mine whatever is most profitable together with all other miners using our system at the same time.
-Every valid share will be written to our database, whenever we recieve a payment from a pool we'll split it according to the shares in our database
-and exchange it automaticaly to the coins our Miners selected. 
-As we combine all our hashrates together the system works better the more miner we have, so we get faster and more frequent payouts.
+On first startup, the miner will **benchmark** your mining hardware. These benchmarks are used to determine the most profitable coin for you to mine. 
 
-If you have any questions feel free to ask.
+You will get payments according to the shares you submitted in the coin you have chosen.
+
+Whenever there is a more profitable coin to mine, the miner switches automatically - you don't have to do anything.
+
+
+
+If you have any questions, feel free to ask.
 
 Yours sincerly
 
-FreedomHash Team
-
-
-
+creepHash Team
