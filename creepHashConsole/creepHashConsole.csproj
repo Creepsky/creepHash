@@ -9,6 +9,14 @@
   <PropertyGroup>
     <RuntimeIdentifiers>win10-x64;ubuntu.16.10-x64</RuntimeIdentifiers>
     <Version>0.5.0.0</Version>
+    <AssemblyName>creepHash</AssemblyName>
+    <Authors>Creepsky</Authors>
+    <PackageLicenseUrl>https://github.com/Creepsky/creepHash/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/Creepsky/creepHash</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Creepsky/creepHash</RepositoryUrl>
+    <Copyright>Apache License 2</Copyright>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Company>creepHash</Company>
   </PropertyGroup>
 
   <ItemGroup>

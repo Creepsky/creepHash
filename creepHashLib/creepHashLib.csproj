@@ -2,6 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Creepsky</Authors>
+    <Copyright>Apache License 2</Copyright>
+    <PackageLicenseUrl>https://github.com/Creepsky/creepHash/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/Creepsky/creepHash</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Creepsky/creepHash</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>

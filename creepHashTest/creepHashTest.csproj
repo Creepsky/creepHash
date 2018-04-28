@@ -4,6 +4,14 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
 
     <IsPackable>false</IsPackable>
+
+    <Authors>Creepsky</Authors>
+
+    <Copyright>Apache License 2</Copyright>
+
+    <PackageLicenseUrl>https://github.com/Creepsky/creepHash/blob/master/LICENSE</PackageLicenseUrl>
+
+    <PackageProjectUrl>https://github.com/Creepsky/creepHash</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>
