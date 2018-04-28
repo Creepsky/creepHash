@@ -109,7 +109,7 @@ namespace creepHashLib.Mining
                 }, internCtx);
 
                 foreach (var line in ProcessHelper.ReadLines(Miner.Path, parameter, internCtx))
-                    Logger.Debug(line);
+                    Logger.Info(line);
             }
             catch (OperationCanceledException e)
             {
@@ -162,7 +162,7 @@ namespace creepHashLib.Mining
                 }, internCtx);
 
                 foreach (var line in ProcessHelper.ReadLines(Miner.Path, parameter, internCtx))
-                    Logger.Debug(line);
+                    Logger.Info(line);
             }
             catch (OperationCanceledException e)
             {

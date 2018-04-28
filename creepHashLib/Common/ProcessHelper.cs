@@ -54,7 +54,7 @@ namespace creepHashLib.Common
                 }
                 catch (Exception e)
                 {
-                    Logger.Debug($"Could not kill the process {path}: {e}");
+                    Logger.Warning($"Could not kill the process {path}: {e}");
                 }
             }, cancellationToken);
 
