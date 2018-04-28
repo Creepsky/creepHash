@@ -19,11 +19,11 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using MultiCryptoToolLib.Common;
-using MultiCryptoToolLib.Common.Logging;
-using MultiCryptoToolLib.Mining.Hardware;
+using creepHashLib.Common;
+using creepHashLib.Common.Logging;
+using creepHashLib.Mining.Hardware;
 
-namespace MultiCryptoToolLib.Mining
+namespace creepHashLib.Mining
 {
     public abstract class MiningInstance
     {

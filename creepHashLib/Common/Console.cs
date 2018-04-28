@@ -16,7 +16,7 @@
 using System;
 using System.Text;
 
-namespace MultiCryptoToolLib.Common
+namespace creepHashLib.Common
 {
     public static class Console
     {

@@ -18,10 +18,10 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using MultiCryptoToolLib.Common;
-using MultiCryptoToolLib.Common.Logging;
+using creepHashLib.Common.Logging;
+using creepHashLib.Common;
 
-namespace MultiCryptoToolLib.Network
+namespace creepHashLib.Network
 {
     public class LoginManager
     {

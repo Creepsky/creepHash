@@ -18,12 +18,12 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using MultiCryptoToolLib.Common;
-using MultiCryptoToolLib.Common.Logging;
+using creepHashLib.Common;
+using creepHashLib.Common.Logging;
 using Newtonsoft.Json.Linq;
 using Console = System.Console;
 
-namespace MultiCryptoToolLib.Network
+namespace creepHashLib.Network
 {
     public class PortLoader : ILoaderAsync<IDictionary<Mining.Coin, int>>
     {

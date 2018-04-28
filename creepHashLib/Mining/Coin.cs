@@ -19,7 +19,7 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 
-namespace MultiCryptoToolLib.Mining
+namespace creepHashLib.Mining
 {
     public class Coin
     {

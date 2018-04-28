@@ -21,9 +21,9 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Threading;
 using System.Threading.Tasks;
-using MultiCryptoToolLib.Common;
+using creepHashLib.Common;
 
-namespace MultiCryptoToolLib.Network
+namespace creepHashLib.Network
 {
     public class PingTest : PeriodicTask<(Uri, TimeSpan)>
     {

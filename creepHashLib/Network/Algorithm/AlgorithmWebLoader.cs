@@ -18,10 +18,10 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using MultiCryptoToolLib.Mining;
+using creepHashLib.Mining;
 using Newtonsoft.Json.Linq;
 
-namespace MultiCryptoToolLib.Network.Algorithm
+namespace creepHashLib.Network.Algorithm
 {
     public class AlgorithmWebLoader : IAlgorithLoaderAsync
     {

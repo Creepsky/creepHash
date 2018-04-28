@@ -16,7 +16,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MultiCryptoToolLib.Common
+namespace creepHashLib.Common
 {
     public interface ILoader<out T>
     {

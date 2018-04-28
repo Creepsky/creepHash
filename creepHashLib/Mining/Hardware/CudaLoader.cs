@@ -18,9 +18,9 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using MultiCryptoToolLib.Common;
+using creepHashLib.Common;
 
-namespace MultiCryptoToolLib.Mining.Hardware
+namespace creepHashLib.Mining.Hardware
 {
     public class CudaLoader : ILoaderAsync<ISet<Hardware>>
     {

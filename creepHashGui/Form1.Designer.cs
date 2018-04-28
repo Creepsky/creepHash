@@ -1,4 +1,4 @@
-﻿namespace MultiMinerGui
+﻿namespace creepHashGui
 {
     partial class Form1
     {

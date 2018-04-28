@@ -15,10 +15,10 @@
 
 using System;
 using System.Threading;
-using MultiCryptoToolLib.Common.Logging;
-using MultiCryptoToolLib.Mining;
+using creepHashLib.Common.Logging;
+using creepHashLib.Mining;
 
-namespace MultiMinerConsole
+namespace creepHashConsole
 {
     internal class Program
     {

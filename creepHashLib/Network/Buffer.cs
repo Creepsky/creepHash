@@ -17,7 +17,7 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 
-namespace MultiCryptoToolLib.Network
+namespace creepHashLib.Network
 {
     public class Buffer
     {

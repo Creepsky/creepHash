@@ -14,11 +14,11 @@
  */
 
 using System.Text;
-using MultiCryptoToolLib.Mining.Hardware;
+using creepHashLib.Mining.Hardware;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace MultiCryptoToolLib.Common
+namespace creepHashLib.Common
 {
     public static class JsonHelper
     {

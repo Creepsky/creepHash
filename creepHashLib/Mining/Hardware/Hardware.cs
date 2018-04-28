@@ -15,7 +15,7 @@
 
 using System.Collections.Generic;
 
-namespace MultiCryptoToolLib.Mining.Hardware
+namespace creepHashLib.Mining.Hardware
 {
     public enum HardwareType
     {

@@ -18,11 +18,11 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using MultiCryptoToolLib.Common;
-using MultiCryptoToolLib.Mining;
+using creepHashLib.Common;
+using creepHashLib.Mining;
 using Newtonsoft.Json.Linq;
 
-namespace MultiCryptoToolLib.Network
+namespace creepHashLib.Network
 {
     public class ProfitabilityLoader : ILoaderAsync<IDictionary<Coin, double>>
     {

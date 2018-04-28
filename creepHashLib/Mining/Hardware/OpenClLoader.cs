@@ -17,9 +17,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using MultiCryptoToolLib.Common;
+using creepHashLib.Common;
 
-namespace MultiCryptoToolLib.Mining.Hardware
+namespace creepHashLib.Mining.Hardware
 {
     public class OpenClLoader : ILoaderAsync<ISet<Hardware>>
     {

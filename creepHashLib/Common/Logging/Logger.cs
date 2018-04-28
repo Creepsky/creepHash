@@ -17,7 +17,7 @@ using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
-namespace MultiCryptoToolLib.Common.Logging
+namespace creepHashLib.Common.Logging
 {
     public delegate void LogMessage(string message, string file, int line);
     public delegate void ExceptionMessage(string message, Exception exception, string file, int line);

@@ -15,11 +15,11 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using MultiCryptoToolLib.Common;
-using MultiCryptoToolLib.Mining;
-using MultiCryptoToolLib.Mining.Hardware;
+using creepHashLib.Common;
+using creepHashLib.Mining;
+using creepHashLib.Mining.Hardware;
 
-namespace MultiCryptoToolLib.Benchmark.File
+namespace creepHashLib.Benchmark.File
 {
     public interface IBenchmarkFile : ILoader<IDictionary<Hardware, IDictionary<string, HashRate>>>
     {

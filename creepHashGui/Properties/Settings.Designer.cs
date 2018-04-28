@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MultiMinerGui.Properties
+namespace creepHashGui.Properties
 {
 
 

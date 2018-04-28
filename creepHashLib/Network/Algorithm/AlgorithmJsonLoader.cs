@@ -18,7 +18,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Newtonsoft.Json.Linq;
 
-namespace MultiCryptoToolLib.Network.Algorithm
+namespace creepHashLib.Network.Algorithm
 {
     // TODO: remove this shit
     public class AlgorithmJsonLoader : IAlgorithmLoader

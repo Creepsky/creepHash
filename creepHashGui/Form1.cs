@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace MultiMinerGui
+namespace creepHashGui
 {
     public partial class Form1 : Form
     {

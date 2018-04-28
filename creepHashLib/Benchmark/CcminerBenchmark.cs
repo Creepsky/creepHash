@@ -18,12 +18,12 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using MultiCryptoToolLib.Common;
-using MultiCryptoToolLib.Common.Logging;
-using MultiCryptoToolLib.Mining;
-using MultiCryptoToolLib.Mining.Hardware;
+using creepHashLib.Common;
+using creepHashLib.Common.Logging;
+using creepHashLib.Mining;
+using creepHashLib.Mining.Hardware;
 
-namespace MultiCryptoToolLib.Benchmark
+namespace creepHashLib.Benchmark
 {
     public class CcminerBenchmark : Benchmark
     {

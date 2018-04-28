@@ -16,7 +16,7 @@
 using System;
 using System.IO;
 
-namespace MultiCryptoToolLib.Common.Logging
+namespace creepHashLib.Common.Logging
 {
     public static class ConsoleLogger
     {

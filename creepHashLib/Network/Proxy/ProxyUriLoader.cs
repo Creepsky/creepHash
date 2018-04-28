@@ -18,10 +18,10 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using MultiCryptoToolLib.Common;
+using creepHashLib.Common;
 using Newtonsoft.Json.Linq;
 
-namespace MultiCryptoToolLib.Network.Proxy
+namespace creepHashLib.Network.Proxy
 {
     public class ProxyUriLoader : ILoaderAsync<IList<Uri>>
     {

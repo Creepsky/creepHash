@@ -17,13 +17,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
-using MultiCryptoToolLib.Common;
-using MultiCryptoToolLib.Common.Logging;
-using MultiCryptoToolLib.Mining.Hardware;
+using creepHashLib.Common;
+using creepHashLib.Common.Logging;
+using creepHashLib.Mining.Hardware;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace MultiCryptoToolLib.Benchmark.File
+namespace creepHashLib.Benchmark.File
 {
     public class BenchmarkFileJson : IBenchmarkFile
     {

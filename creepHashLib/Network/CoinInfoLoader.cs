@@ -18,12 +18,12 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using MultiCryptoToolLib.Common;
-using MultiCryptoToolLib.Common.Logging;
-using MultiCryptoToolLib.Mining;
+using creepHashLib.Common;
+using creepHashLib.Common.Logging;
+using creepHashLib.Mining;
 using Newtonsoft.Json.Linq;
 
-namespace MultiCryptoToolLib.Network
+namespace creepHashLib.Network
 {
     public class CoinInfoLoader : ILoaderAsync<IList<Coin.Info>>
     {

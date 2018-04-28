@@ -18,9 +18,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
-using MultiCryptoToolLib.Common.Logging;
+using creepHashLib.Common.Logging;
 
-namespace MultiCryptoToolLib.Common
+namespace creepHashLib.Common
 {
     public static class ProcessHelper
     {

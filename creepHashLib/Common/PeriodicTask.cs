@@ -17,7 +17,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MultiCryptoToolLib.Common
+namespace creepHashLib.Common
 {
     public abstract class PeriodicTask<T>
     {

@@ -15,7 +15,7 @@
 
 using System;
 
-namespace MultiCryptoToolLib.Common
+namespace creepHashLib.Common
 {
     public static class Filename
     {

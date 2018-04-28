@@ -16,11 +16,11 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using MultiCryptoToolLib.Common;
-using MultiCryptoToolLib.Mining;
-using MultiCryptoToolLib.Mining.Hardware;
+using creepHashLib.Common;
+using creepHashLib.Mining;
+using creepHashLib.Mining.Hardware;
 
-namespace MultiCryptoToolLib.Benchmark
+namespace creepHashLib.Benchmark
 {
     public abstract class Benchmark : ILoaderAsync<HashRate>
     {

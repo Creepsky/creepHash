@@ -15,7 +15,7 @@
 
 //using MultiMinerLib.Core;
 
-namespace MultiMinerConsole
+namespace creepHashConsole
 {
     //public class MultiMiner : MultiMinerBase
     //{

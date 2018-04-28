@@ -21,14 +21,14 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using MultiCryptoToolLib.Benchmark.File;
-using MultiCryptoToolLib.Common;
-using MultiCryptoToolLib.Common.Logging;
-using MultiCryptoToolLib.Mining.Hardware;
-using MultiCryptoToolLib.Network;
-using MultiCryptoToolLib.Network.Proxy;
+using creepHashLib.Benchmark.File;
+using creepHashLib.Common;
+using creepHashLib.Common.Logging;
+using creepHashLib.Mining.Hardware;
+using creepHashLib.Network;
+using creepHashLib.Network.Proxy;
 
-namespace MultiCryptoToolLib.Mining
+namespace creepHashLib.Mining
 {
     using HardwareMinerProfit = IDictionary<Hardware.Hardware, MinerProfit>;
 

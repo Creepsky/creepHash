@@ -17,11 +17,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using MultiCryptoToolLib.Common;
-using MultiCryptoToolLib.Mining.Hardware;
+using creepHashLib.Common;
+using creepHashLib.Mining.Hardware;
 using Newtonsoft.Json.Linq;
 
-namespace MultiCryptoToolLib.Mining
+namespace creepHashLib.Mining
 {
     public class Miner
     {

@@ -15,7 +15,7 @@
 
 using Xunit;
 
-namespace MultiMinerTest
+namespace creepHashTest
 {
     public class UnitTest1
     {
