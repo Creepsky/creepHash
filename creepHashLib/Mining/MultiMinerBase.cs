@@ -333,15 +333,32 @@ namespace creepHashLib.Mining
 
             Logger.Info(sb.ToString());
 
-            foreach (var m in miner)
-            foreach (var (a, h) in benchmarkFiles[m].GetUnfinishedAlgorithms(m, hardware))
+            var hardwareGroups = hardware.GroupBy(i => i.Type).Select(i => i.Select(j => j));
+
+            foreach (var hardwareGroupIter in hardwareGroups)
             {
-                Logger.Info($"Benchmarking {a} on {h} with {m}");
-                if (!benchmarkFiles[m].HashRates.ContainsKey(h))
-                    benchmarkFiles[m].HashRates.Add(h, new Dictionary<string, HashRate>());
-                var result = Benchmark.Benchmark.Create(m, a, h).Load(_ctx);
-                benchmarkFiles[m].HashRates[h].Add(a, result);
-                Logger.Info($"Benchmarked {a} on {h} with {m}: {result}");
+                var threads = new List<Thread>();
+                var hardwareGroup = hardwareGroupIter.ToList();
+
+                foreach (var m in miner)
+                foreach (var (a, h) in benchmarkFiles[m].GetUnfinishedAlgorithms(m, hardwareGroup))
+                {
+                    threads.Add(new Thread(() =>
+                    {
+                        Logger.Info($"Benchmarking {a} on {h} with {m}");
+                        if (!benchmarkFiles[m].HashRates.ContainsKey(h))
+                            benchmarkFiles[m].HashRates.Add(h, new Dictionary<string, HashRate>());
+                        var result = Benchmark.Benchmark.Create(m, a, h).Load(_ctx);
+                        benchmarkFiles[m].HashRates[h].Add(a, result);
+                        Logger.Info($"Benchmarked {a} on {h} with {m}: {result}");
+                    }));
+                }
+
+                foreach (var thread in threads)
+                    thread.Join();
+
+                if (_ctx.IsCancellationRequested)
+                    break;
             }
 
             foreach (var bf in benchmarkFiles)
