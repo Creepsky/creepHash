@@ -12,12 +12,13 @@ Please note we're currently in **Beta** state and you could experience difficult
 
 The command should look like this:
 
-`creepHash.exe -uri=http://5.39.93.90:3000 -coin=ETH -address=0x15042494c1e0f78bc344f43c2de2252e1bfcacae`
+`creepHash.exe -uri=http://5.39.93.90:3001 -coin=ETH -address=0x15042494c1e0f78bc344f43c2de2252e1bfcacae`
 
 ## Run the miner
 
 On first startup, the miner will **benchmark** your mining hardware. These benchmarks are used to determine the most profitable coin for you to mine. 
 
+All earned coins will be automaticaly exchanged to the coin you've choosen. You don't need any other wallets or worry about finding pools and setting everything up. 
 You will get payments according to the shares you submitted in the coin you have chosen.
 
 Whenever there is a more profitable coin to mine, the miner switches automatically - you don't have to do anything.
