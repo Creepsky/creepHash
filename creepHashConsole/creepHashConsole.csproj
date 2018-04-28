@@ -6,12 +6,13 @@
     <StartupObject>MultiMinerConsole.Program</StartupObject>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\MultiCryptoToolLib\MultiCryptoToolLib.csproj" />
-  </ItemGroup>
-
   <PropertyGroup>
     <RuntimeIdentifiers>win10-x64;ubuntu.16.10-x64</RuntimeIdentifiers>
+    <Version>0.5.0.0</Version>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\creepHashLib\creepHashLib.csproj" />
+  </ItemGroup>
 
 </Project>

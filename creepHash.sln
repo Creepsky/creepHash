@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiMinerConsole", "MultiMinerConsole\MultiMinerConsole.csproj", "{A96DFFAB-4E89-452A-BD45-5829CEABC578}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "creepHashConsole", "creepHashConsole\creepHashConsole.csproj", "{A96DFFAB-4E89-452A-BD45-5829CEABC578}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiMinerTest", "MultiMinerTest\MultiMinerTest.csproj", "{6D38C680-8367-4D32-B296-372FA7C07AE1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "creepHashTest", "creepHashTest\creepHashTest.csproj", "{6D38C680-8367-4D32-B296-372FA7C07AE1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiCryptoToolLib", "MultiCryptoToolLib\MultiCryptoToolLib.csproj", "{B2740FBA-E468-4C5A-92AC-A9DEF4DB197F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "creepHashLib", "creepHashLib\creepHashLib.csproj", "{B2740FBA-E468-4C5A-92AC-A9DEF4DB197F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiMinerGui", "MultiMinerGui\MultiMinerGui.csproj", "{D241BD2F-C1B0-4FDD-B4A8-67AF0367CF64}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "creepHashGui", "creepHashGui\creepHashGui.csproj", "{D241BD2F-C1B0-4FDD-B4A8-67AF0367CF64}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

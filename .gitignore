@@ -260,9 +260,9 @@ paket-files/
 __pycache__/
 *.pyc
 
-MultiMinerConsole/benchmarks/
-MultiMinerConsole/miner/
-MultiMinerConsole/utils/
+creepHashConsole/benchmarks/
+creepHashConsole/miner/
+creepHashConsole/utils/
 
-/MultiMinerConsole/Properties/launchSettings.json
+/creepHashConsole/Properties/launchSettings.json
 /miner
