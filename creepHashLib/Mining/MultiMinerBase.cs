@@ -381,22 +381,7 @@ namespace creepHashLib.Mining
         {
             Logger.Info("Calculating most profitable algorithms...");
             var bestHardwareAlgorithms = hardware.ToDictionary(i => i, i => default(MinerProfit));
-            //var algorithmInfos = coinInfos.GroupBy(i => i.Coin.Algorithm).ToDictionary(i => i.Key, i => i.ToList());
 
-            //Coin.Info GetBestCoin(IList<Coin.Info> ci)
-            //{
-            //    var best = new Coin.Info();
-
-            //    for (var i = 0; i < ci.Count; ++i)
-            //        if (i == 0 || best.Profitability < ci[i].Profitability)
-            //            best = ci[i];
-
-            //    return best;
-            //}
-
-            //var algorithmBestCoins = algorithmInfos.ToDictionary(i => i.Key, i => GetBestCoin(i.Value));
-
-            //foreach (var a in algorithmBestCoins)
             foreach (var c in coinInfos)
             {
                 var a = c.Coin.Algorithm;
@@ -405,26 +390,32 @@ namespace creepHashLib.Mining
                 {
                     foreach (var h in b.Value.HashRates)
                     {
-                        if (h.Value.ContainsKey(a))
+                        if (!h.Value.ContainsKey(a)) continue;
+
+                        var profit = c.Profitability * h.Value[a].Value;
+
+                        if (!bestHardwareAlgorithms.ContainsKey(h.Key)) continue;
+
+                        if (bestHardwareAlgorithms[h.Key] == null ||
+                            bestHardwareAlgorithms[h.Key].Profit < profit)
                         {
-                            var profit = c.Profitability * h.Value[a].Value;
-
-                            if (!bestHardwareAlgorithms.ContainsKey(h.Key))
-                                continue;
-
-                            if (bestHardwareAlgorithms[h.Key] == null ||
-                                bestHardwareAlgorithms[h.Key].Profit < profit)
+                            bestHardwareAlgorithms[h.Key] = new MinerProfit
                             {
-                                bestHardwareAlgorithms[h.Key] = new MinerProfit
-                                {
-                                    Key = c.Coin,
-                                    Miner = b.Key,
-                                    Profit = profit
-                                };
-                            }
+                                Key = c.Coin,
+                                Miner = b.Key,
+                                Profit = profit
+                            };
                         }
                     }
                 }
+            }
+
+            foreach (var i in bestHardwareAlgorithms.GroupBy(i => (i.Key.PciBus, i.Key.PciSlot)).ToList())
+            {
+                var ordered = i.OrderByDescending(j => j.Value.Profit).ToList();
+
+                for (var j = 1; j < ordered.Count; ++j)
+                    bestHardwareAlgorithms.Remove(ordered[j].Key);
             }
 
             var sb = new StringBuilder();
@@ -463,7 +454,6 @@ namespace creepHashLib.Mining
 
                     var alreadyRunning = _miningInstances.Any(i =>
                         hardwareInUse != null &&
-                        // TODO: changed from i.Algorithm == ba.Value.Key
                         i.Algorithm == ba.Value.Key.Algorithm &&
                         i.Miner == ba.Value.Miner);
 
