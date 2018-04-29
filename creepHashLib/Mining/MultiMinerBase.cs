@@ -263,8 +263,6 @@ namespace creepHashLib.Mining
         private Task<IList<Hardware.Hardware>> LoadHardware()
         {
             var hardware = new List<Hardware.Hardware>();
-            var cudaGpus = new CudaLoader().LoadAsync(_ctx);
-            var openclGpus = new OpenClLoader().LoadAsync(_ctx);
             
             try
             {
@@ -273,7 +271,7 @@ namespace creepHashLib.Mining
 
                 try
                 {
-                    cudaDevices = cudaGpus.Result;
+                    cudaDevices = new CudaLoader().Load(_ctx);
                 }
                 catch (Exception e)
                 {
@@ -282,16 +280,15 @@ namespace creepHashLib.Mining
 
                 try
                 {
-                    openclDevices = openclGpus.Result;
+                    openclDevices = new OpenClLoader().Load(_ctx);
                 }
                 catch (Exception e)
                 {
                     throw new Exception("Could not load OpenCL devices", e);
                 }
 
-                hardware.AddRange(cudaDevices.Any() ? cudaDevices : openclDevices);
-                //hardware.AddRange(cudaGpus.Result);
-                //hardware.AddRange(openclGpus.Result);
+                hardware.AddRange(cudaDevices);
+                hardware.AddRange(openclDevices);
             
                 var sb = new StringBuilder();
                 sb.AppendLine("Found hardware:");
