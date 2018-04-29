@@ -25,7 +25,7 @@ namespace creepHashLib.Mining
 {
     public class Miner
     {
-        private static readonly IList<Miner> Miners = new List<Miner>();
+        public static readonly IList<Miner> Miners = new List<Miner>();
 
         public string Name { get; }
 

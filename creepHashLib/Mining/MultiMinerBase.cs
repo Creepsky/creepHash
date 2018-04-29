@@ -225,11 +225,7 @@ namespace creepHashLib.Mining
         {
             try
             {
-                var miner = new List<Miner>
-                {
-                    Miner.FromString("ccminer"),
-                    Miner.FromString("ethminer")
-                };
+                var miner = Miner.Miners;
 
                 var loadedMiner = new List<Miner>();
 
