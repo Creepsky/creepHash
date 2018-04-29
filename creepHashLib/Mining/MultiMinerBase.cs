@@ -330,32 +330,49 @@ namespace creepHashLib.Mining
 
             Logger.Info(sb.ToString());
 
-            var hardwareGroups = hardware.GroupBy(i => i.Type).Select(i => i.Select(j => j));
+            var identicalHardware = hardware.GroupBy(i => (i.PciBus, i.PciSlot)).ToList();
+            var maxGroupSize = identicalHardware.Max(i => i.Count());
 
-            foreach (var hardwareGroupIter in hardwareGroups)
+            for (var i = 0; i < maxGroupSize; ++i)
             {
-                var threads = new List<Thread>();
-                var hardwareGroup = hardwareGroupIter.ToList();
+                var hardwareGroup = identicalHardware.Where(j => j.Count() > i).Select(j => j.ElementAt(i)).ToList();
 
                 foreach (var m in miner)
-                foreach (var (a, h) in benchmarkFiles[m].GetUnfinishedAlgorithms(m, hardwareGroup))
                 {
-                    threads.Add(new Thread(() =>
-                    {
-                        Logger.Info($"Benchmarking {a} on {h} with {m}");
-                        if (!benchmarkFiles[m].HashRates.ContainsKey(h))
-                            benchmarkFiles[m].HashRates.Add(h, new Dictionary<string, HashRate>());
-                        var result = Benchmark.Benchmark.Create(m, a, h).Load(_ctx);
-                        benchmarkFiles[m].HashRates[h].Add(a, result);
-                        Logger.Info($"Benchmarked {a} on {h} with {m}: {result}");
-                    }));
+                    var unfinishedAlgorithms = benchmarkFiles[m].GetUnfinishedAlgorithms(m, hardwareGroup).ToList();
+
+                    if (!unfinishedAlgorithms.Any()) continue;
+
+                    var threads = unfinishedAlgorithms
+                        .GroupBy(j => j.hardware, j => j.algorithm)
+                        .Select(g => new Thread(() =>
+                        {
+                            var h = g.Key;
+
+                            foreach (var a in g)
+                            {
+                                Logger.Info($"Benchmarking {a} on {h} with {m}");
+                                if (!benchmarkFiles[m].HashRates.ContainsKey(h)) benchmarkFiles[m].HashRates.Add(h, new Dictionary<string, HashRate>());
+                                var result = Benchmark.Benchmark.Create(m, a, h).Load(_ctx);
+                                benchmarkFiles[m].HashRates[h].Add(a, result);
+                                Logger.Info($"Benchmarked {a} on {h} with {m}: {result}");
+
+                                lock (benchmarkFiles[m])
+                                {
+                                    benchmarkFiles[m].Save();
+                                }
+
+                                if (_ctx.IsCancellationRequested) break;
+                            }
+                        }))
+                        .ToList();
+
+                    foreach (var thread in threads)
+                        thread.Start();
+
+                    foreach (var thread in threads)
+                        thread.Join();
                 }
-
-                foreach (var thread in threads)
-                    thread.Join();
-
-                if (_ctx.IsCancellationRequested)
-                    break;
             }
 
             foreach (var bf in benchmarkFiles)
