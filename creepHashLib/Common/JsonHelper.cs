@@ -29,6 +29,8 @@ namespace creepHashLib.Common
             new JProperty("platform", hardware.Platform),
             new JProperty("name", hardware.Name),
             new JProperty("type", hardware.Type),
+            new JProperty("pciBus", hardware.PciBus),
+            new JProperty("pciSlot", hardware.PciSlot),
         };
 
         public static JProperty ToJson(this string algorithm, HashRate hashRate) =>
@@ -38,14 +40,15 @@ namespace creepHashLib.Common
         {
             var jsonObject = (JObject) json;
 
-            hardware = new Hardware
-            {
-                PlatformIndex = jsonObject.Value<int>("platformIndex"),
-                Index = jsonObject.Value<int>("index"),
-                Platform = jsonObject.Value<string>("platform"),
-                Name = jsonObject.Value<string>("name"),
-                Type = (HardwareType)jsonObject.Value<int>("type"),
-            };
+            hardware = new Hardware(
+                (HardwareType)jsonObject.Value<int>("type"),
+                jsonObject.Value<int>("index"),
+                jsonObject.Value<int>("platformIndex"),
+                jsonObject.Value<string>("name"),
+                jsonObject.Value<string>("platform"),
+                jsonObject.Value<int>("pciBus"),
+                jsonObject.Value<int>("pciSlot")
+            );
         }
 
         public static void FromJson(JToken json, out string algorithm, out HashRate hashRate)

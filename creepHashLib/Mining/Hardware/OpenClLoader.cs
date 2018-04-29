@@ -56,14 +56,8 @@ namespace creepHashLib.Mining.Hardware
                 var tokens = i.Split(';');
                 var platformIndex = int.Parse(tokens[1]);
 
-                return new Hardware
-                {
-                    Index = int.Parse(tokens[0]),
-                    Name = tokens[2],
-                    PlatformIndex = platformIndex,
-                    Platform = platforms[platformIndex],
-                    Type = HardwareType.OpenCl
-                };
+                return new Hardware(HardwareType.OpenCl, int.Parse(tokens[0]), platformIndex, tokens[2],
+                    platforms[platformIndex], int.Parse(tokens[3]), int.Parse(tokens[4]));
             }));
     }
 }

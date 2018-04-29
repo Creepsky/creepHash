@@ -14,11 +14,11 @@
  */
 
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using creepHashLib.Common;
+using creepHashLib.Common.Logging;
 
 namespace creepHashLib.Mining.Hardware
 {
@@ -32,21 +32,46 @@ namespace creepHashLib.Mining.Hardware
             () => ProcessHelper.ReadLines($"miner/ethminer{Filename.GetFileExtensionOs()}", "-U --list-devices",
                 ctx), ctx));
 
-        private static ISet<Hardware> StringListToHardwares(IEnumerable<string> strings) => new HashSet<Hardware>(strings.Select(i =>
+        private static ISet<Hardware> StringListToHardwares(IEnumerable<string> strings)
+        {
+            var hardware = new HashSet<Hardware>();
+            int? currentIndex = null;
+            string currentName = null;
+
+            foreach (var line in strings)
             {
-                var match = Regex.Match(i, @"\[(\d+)\]\s(.+)");
-                if (match.Success)
+                var matchHardware = Regex.Match(line, @"\[(\d+)\]\s(.+)");
+
+                if (matchHardware.Success)
                 {
-                    return new Hardware
-                    {
-                        Index = int.Parse(match.Groups[1].Value),
-                        Name = match.Groups[2].Value,
-                        Type = HardwareType.Cuda
-                    };
+                    currentIndex = int.Parse(matchHardware.Groups[1].Value);
+                    currentName = matchHardware.Groups[2].Value;
+                    continue;
                 }
 
-                return new Hardware();
-            })
-            .Where(i => !string.IsNullOrWhiteSpace(i.Name)));
+                var matchPci = Regex.Match(line, @".*Pci:.\s*[0-9A-Fa-f]{4}:(\d*):(\d*)");
+
+                if (matchPci.Success)
+                {
+                    var pciBus = int.Parse(matchPci.Groups[1].Value);
+                    var pciSlot = int.Parse(matchPci.Groups[2].Value);
+
+                    if (currentIndex == null || string.IsNullOrEmpty(currentName))
+                    {
+                        Logger.Error(
+                            $"Could not load a CUDA device at PCI BUS {pciBus}, slot {pciSlot}: name or index is empty");
+                        continue;
+                    }
+
+                    hardware.Add(new Hardware(HardwareType.Cuda, currentIndex.Value, 0, currentName, null, pciBus,
+                        pciSlot));
+
+                    currentIndex = null;
+                    currentName = null;
+                }
+            }
+
+            return hardware;
+        }
     }
 }

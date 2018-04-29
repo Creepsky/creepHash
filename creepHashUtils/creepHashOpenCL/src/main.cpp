@@ -20,6 +20,7 @@
 // ==========================================================================
 
 #include <CL/cl.h>
+#include <CL/cl_ext.h>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -35,7 +36,7 @@ static bool get_info(const TSubject& subject, std::string& info, TInfoFunc info_
 int main(const int argn, const char** argv)
 {
 	const auto divider = ';';
-	
+
 	if (argn != 2)
 		return show_usage();
 
@@ -51,7 +52,7 @@ int main(const int argn, const char** argv)
 	const auto arg_devices = is_arg(arg, "--devices");
 	const auto arg_platform = is_arg(arg, "--platform=", arg_platform_index);
 	const auto arg_platform_devices = is_arg(arg, "--platform-devices=", arg_platform_devices_index);
-	
+
 	vector<cl_platform_id> platform_ids;
 	vector<cl_device_id> device_ids;
 	cl_uint platforms;
@@ -126,6 +127,9 @@ int main(const int argn, const char** argv)
 
 			error = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_GPU, 0, nullptr, &devices);
 
+			if (error == CL_DEVICE_NOT_FOUND)
+				continue;
+
 			if (error != CL_SUCCESS)
 			{
 				cerr << "Could not detect the number of valid OpenCL devices: errno " << error << endl;
@@ -144,12 +148,44 @@ int main(const int argn, const char** argv)
 			for (size_t i = 0; i < device_ids.size(); ++i)
 			{
 				const auto& device_id = device_ids[i];
+				cl_device_topology_amd topology;
 				string name;
+				int pci_bus, pci_slot;
+				auto pci_bus_slot_scanned = false;
+
+				const auto topology_status = clGetDeviceInfo(device_id, CL_DEVICE_TOPOLOGY_AMD, sizeof(cl_device_topology_amd), &topology, nullptr);
+
+				if (topology_status == CL_SUCCESS)
+				{
+					if (topology.raw.type == CL_DEVICE_TOPOLOGY_TYPE_PCIE_AMD)
+					{
+						pci_bus = static_cast<int>(topology.pcie.bus);
+						pci_slot = static_cast<int>(topology.pcie.device);
+						pci_bus_slot_scanned = true;
+					}
+				}
+
+
+				if (!pci_bus_slot_scanned)
+				{
+					const auto pci_bus_status = clGetDeviceInfo(device_id, 0x4008, sizeof(int), &pci_bus, nullptr);
+					const auto pci_slot_status = clGetDeviceInfo(device_id, 0x4009, sizeof(int), &pci_slot, nullptr);
+
+					if (pci_bus_status != CL_SUCCESS || pci_slot_status != CL_SUCCESS)
+					{
+						cout << "Could not get PCI bus/slot for device " << device_id << ": errno: "
+							<< pci_bus_status << "/" << pci_slot_status << endl;
+						continue;
+					}
+				}
 
 				if (get_info(device_id, name, clGetDeviceInfo, CL_DEVICE_NAME, error))
 					cout << i << divider
 						 << p << divider
-						 << name << endl;
+						 << name << divider
+						 << pci_bus << divider
+						 << pci_slot
+						 << endl;
 			}
 		}
 

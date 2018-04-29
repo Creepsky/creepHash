@@ -26,11 +26,24 @@ namespace creepHashLib.Mining.Hardware
 
     public class Hardware
     {
-        public HardwareType Type;
-        public int Index;
-        public int PlatformIndex;
-        public string Name;
-        public string Platform;
+        public readonly HardwareType Type;
+        public readonly int Index;
+        public readonly int PlatformIndex;
+        public readonly string Name;
+        public readonly string Platform;
+        public readonly int PciBus;
+        public readonly int PciSlot;
+
+        public Hardware(HardwareType type, int index, int platformIndex, string name, string platform, int pciBus, int pciSlot)
+        {
+            Type = type;
+            Index = index;
+            PlatformIndex = platformIndex;
+            Name = name;
+            Platform = platform;
+            PciBus = pciBus;
+            PciSlot = pciSlot;
+        }
 
         public bool IsCompatibleWith(Miner miner) => miner.HardwareTypes.Contains(Type);
 
@@ -54,6 +67,8 @@ namespace creepHashLib.Mining.Hardware
             hashCode = hashCode * -1521134295 + Type.GetHashCode();
             hashCode = hashCode * -1521134295 + Index.GetHashCode();
             hashCode = hashCode * -1521134295 + PlatformIndex.GetHashCode();
+            hashCode = hashCode * -1521134295 + PciBus.GetHashCode();
+            hashCode = hashCode * -1521134295 + PciSlot.GetHashCode();
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Name);
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Platform);
             return hashCode;
@@ -61,7 +76,7 @@ namespace creepHashLib.Mining.Hardware
 
         public override string ToString()
         {
-            return $"{Name}, {Type}";
+            return $"{Name}, {Type} (PCI BUS {PciBus}, Slot {PciSlot})";
         }
     }
 }

@@ -50,8 +50,13 @@ namespace creepHashLib.Benchmark.File
             return !algorithms.Except(file.HashRates[miningHardware].Keys).Any();
         }
 
-        public static bool IsComplete(this IBenchmarkFile file, IEnumerable<string> algorithms, IEnumerable<Hardware> miningHardware) =>
-            !miningHardware.Except(file.HashRates.Select(i => i.Key)).Any() &&
-            miningHardware.All(hardware => algorithms.All(algorithm => file.HashRates[hardware].ContainsKey(algorithm)));
+        public static bool IsComplete(this IBenchmarkFile file, IEnumerable<string> algorithms, IEnumerable<Hardware> miningHardware)
+        {
+            var enumerable = miningHardware.ToList();
+
+            return !enumerable.Except(file.HashRates.Select(i => i.Key)).Any() &&
+                   enumerable.All(hardware =>
+                       algorithms.All(algorithm => file.HashRates[hardware].ContainsKey(algorithm)));
+        }
     }
 }
