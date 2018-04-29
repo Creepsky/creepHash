@@ -124,7 +124,7 @@ int main(const int argn, const char** argv)
 		{
 			const auto platform_id = platform_ids[p];
 
-			error = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_ALL, 0, nullptr, &devices);
+			error = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_GPU, 0, nullptr, &devices);
 
 			if (error != CL_SUCCESS)
 			{
@@ -133,7 +133,7 @@ int main(const int argn, const char** argv)
 			}
 			
 			device_ids.resize(devices);
-			error = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_ALL, devices, device_ids.data(), nullptr);
+			error = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_GPU, devices, device_ids.data(), nullptr);
 
 			if (error != CL_SUCCESS)
 			{
