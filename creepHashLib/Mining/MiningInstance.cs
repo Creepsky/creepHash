@@ -111,7 +111,7 @@ namespace creepHashLib.Mining
 
                 foreach (var line in ProcessHelper.ReadLines(Miner.Path, parameter, internCtx))
                 {
-                    var rgx = Regex.Match(line, @"\[.*\](.*)");
+                    var rgx = Regex.Match(line, @"\[.*\]\s*(.*)");
                     Logger.Info(rgx.Groups[1].Value);
                 }
             }
@@ -140,7 +140,7 @@ namespace creepHashLib.Mining
         {
             try
             {
-                var parameter = $"--farm recheck 200 -S {_ip}:{_port} -u {RewardCoin}:{RewardAddress}";
+                var parameter = $"--farm-recheck 200 -S {_ip}:{_port} -u {RewardCoin}:{RewardAddress} ";
 
                 if (MiningHardware.FirstOrDefault()?.Type == HardwareType.Cuda)
                 {
