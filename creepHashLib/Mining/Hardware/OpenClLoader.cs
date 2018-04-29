@@ -26,12 +26,12 @@ namespace creepHashLib.Mining.Hardware
         public ISet<Hardware> Load(CancellationToken ctx)
         {
             var platforms = ProcessHelper
-                .ReadLines($"utils/MultiMinerOpenCL{Filename.GetFileExtensionOs()}", "--platforms", ctx)
+                .ReadLines($"utils/creepHashOpenCL{Filename.GetFileExtensionOs()}", "--platforms", ctx)
                 .Select(i => i.Split(';')[1])
                 .ToList();
 
             return StringListToHardwares(
-                ProcessHelper.ReadLines($"utils/MultiMinerOpenCL{Filename.GetFileExtensionOs()}", "--devices",
+                ProcessHelper.ReadLines($"utils/creepHashOpenCL{Filename.GetFileExtensionOs()}", "--devices",
                     ctx), platforms);
         }
 
@@ -39,14 +39,14 @@ namespace creepHashLib.Mining.Hardware
         {
             var platforms =
                 (await Task.Run(
-                    () => ProcessHelper.ReadLines($"utils/MultiMinerOpenCL{Filename.GetFileExtensionOs()}",
+                    () => ProcessHelper.ReadLines($"utils/creepHashOpenCL{Filename.GetFileExtensionOs()}",
                         "--platforms", ctx), ctx))
                 .Select(i => i.Split(';')[1])
                 .ToList();
 
             return StringListToHardwares(
                 await Task.Run(
-                    () => ProcessHelper.ReadLines($"utils/MultiMinerOpenCL{Filename.GetFileExtensionOs()}", "--devices",
+                    () => ProcessHelper.ReadLines($"utils/creepHashOpenCL{Filename.GetFileExtensionOs()}", "--devices",
                         ctx), ctx), platforms);
         }
 
