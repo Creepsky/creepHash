@@ -314,7 +314,7 @@ namespace creepHashLib.Mining
             return LoadBenchmarks(miner, hardware);
         }
 
-        private Dictionary<Miner, IBenchmarkFile> LoadBenchmarks(IList<Miner> miner, IList<Hardware.Hardware> hardware)
+        private Dictionary<Miner, IBenchmarkFile> LoadBenchmarks(IList<Miner> miner, IEnumerable<Hardware.Hardware> hardware)
         {
             var benchmarkFiles = miner.ToDictionary(i => i,
                 i => (IBenchmarkFile)new BenchmarkFileJson($"benchmarks/{i.Name}-{i.Version}.json"));
@@ -330,7 +330,7 @@ namespace creepHashLib.Mining
 
             Logger.Info(sb.ToString());
 
-            var identicalHardware = hardware.GroupBy(i => (i.PciBus, i.PciSlot)).ToList();
+            var identicalHardware = hardware.GroupBy(i => i.PciSlot).ToList();
             var maxGroupSize = identicalHardware.Max(i => i.Count());
 
             for (var i = 0; i < maxGroupSize; ++i)
@@ -427,7 +427,7 @@ namespace creepHashLib.Mining
                 }
             }
 
-            foreach (var i in bestHardwareAlgorithms.GroupBy(i => (i.Key.PciBus, i.Key.PciSlot)).ToList())
+            foreach (var i in bestHardwareAlgorithms.GroupBy(i => i.Key.PciSlot).ToList())
             {
                 var ordered = i.OrderByDescending(j => j.Value.Profit).ToList();
 
