@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using creepHashLib.Common;
@@ -109,7 +110,10 @@ namespace creepHashLib.Mining
                 }, internCtx);
 
                 foreach (var line in ProcessHelper.ReadLines(Miner.Path, parameter, internCtx))
-                    Logger.Info(line);
+                {
+                    var rgx = Regex.Match(line, @"\[.*\](.*)");
+                    Logger.Info(rgx.Groups[1].Value);
+                }
             }
             catch (OperationCanceledException e)
             {
