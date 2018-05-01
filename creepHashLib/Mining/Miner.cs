@@ -31,7 +31,7 @@ namespace creepHashLib.Mining
 
         public string Version { get; }
 
-        public string Path => $"miner/{Name}{Filename.GetFileExtensionOs()}";
+        public string Path => $"miner/{Name}/{Name}{Filename.GetFileExtensionOs()}";
 
         public ISet<string> Algorithms { get; }
 
