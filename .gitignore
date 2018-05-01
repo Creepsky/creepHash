@@ -266,3 +266,5 @@ creepHashConsole/utils/
 
 /creepHashConsole/Properties/launchSettings.json
 /miner
+
+*.zip
