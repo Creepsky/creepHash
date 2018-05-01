@@ -25,11 +25,11 @@ namespace creepHashLib.Mining.Hardware
     public class CudaLoader : ILoaderAsync<ISet<Hardware>>
     {
         public ISet<Hardware> Load(CancellationToken cancellationToken) => StringListToHardwares(
-            ProcessHelper.ReadLines($"miner/ethminer{Filename.GetFileExtensionOs()}", "-U --list-devices",
+            ProcessHelper.ReadLines($"{Miner.FromString("ethminer").Path}", "-U --list-devices",
                 cancellationToken));
 
         public async Task<ISet<Hardware>> LoadAsync(CancellationToken ctx) => StringListToHardwares(await Task.Run(
-            () => ProcessHelper.ReadLines($"miner/ethminer{Filename.GetFileExtensionOs()}", "-U --list-devices",
+            () => ProcessHelper.ReadLines($"{Miner.FromString("ethminer").Path}", "-U --list-devices",
                 ctx), ctx));
 
         private static ISet<Hardware> StringListToHardwares(IEnumerable<string> strings)
