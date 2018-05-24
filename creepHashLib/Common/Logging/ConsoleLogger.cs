@@ -76,7 +76,7 @@ namespace creepHashLib.Common.Logging
                     LogUnsafe(messageLine, file, line, ConsoleColor.Red);
 
                 foreach (var messageLine in exception.ToString().Split(new [] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
-                    LogUnsafe(messageLine, file, line, ConsoleColor.Red);
+                    LogUnsafe(messageLine, file, line, ConsoleColor.DarkGray);
 
                 //foreach (var messageLine in exception.StackTrace.Split(new [] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
                 //    LogUnsafe(messageLine, file, line, ConsoleColor.DarkGray);
