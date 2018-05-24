@@ -1,7 +1,7 @@
 {
     "ccminer": {
         "version": "2.2.4",
-        "hardware": [ "cuda", "opencl" ],
+        "hardware": [ "cuda" ],
         "algorithms": [
             "blake2s",
             "bastion",
