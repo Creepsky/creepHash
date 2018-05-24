@@ -64,7 +64,7 @@ namespace creepHashLib.Common
             else if (metric.StartsWith("sol"))
                 Metric = Metric.Unit;
             else
-                throw new ArgumentOutOfRangeException($"Unknown metric: {metric}");
+                throw new ArgumentOutOfRangeException(nameof(metric), metric, "Unknown hash metric");
         }
 
         public HashRate Convert(Metric metric) =>
@@ -102,7 +102,7 @@ namespace creepHashLib.Common
                     metric = "TH";
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(Metric), Metric, "Unknown hash metric");
             }
 
             return $"{Value:F} {metric}";
