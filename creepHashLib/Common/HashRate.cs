@@ -17,7 +17,7 @@ using System;
 
 namespace creepHashLib.Common
 {
-    public enum Metric : long
+    public enum Metric : UInt64
     {
         Unit = 1,
         Kilo = 1000,
