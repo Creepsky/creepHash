@@ -57,6 +57,9 @@ namespace creepHashLib.Benchmark
             if (miner.Name == "ethminer")
                 return new EthminerBenchmark(algorithm, hardware);
 
+            if (miner.Name == "sgminer")
+                return new SgminerBenchmark(algorithm, hardware, uri, ports);
+
             throw new ArgumentException($"No benchmark found for {miner}");
         }
     }
