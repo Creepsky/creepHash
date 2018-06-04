@@ -51,6 +51,7 @@ namespace creepHashLib.Common
                 try
                 {
                     process.Kill();
+                    Logger.Debug($"Process {path} killed");
                 }
                 catch (Exception e)
                 {
