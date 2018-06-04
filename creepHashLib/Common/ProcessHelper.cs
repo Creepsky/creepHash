@@ -79,6 +79,8 @@ namespace creepHashLib.Common
                 else
                     yield return line;
             }
+
+            process.WaitForExit();
         }
     }
 }
