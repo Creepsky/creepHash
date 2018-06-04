@@ -69,6 +69,17 @@ namespace creepHashLib.Mining
         {
             try
             {
+                var proxy = GetProxyAndPorts();
+
+                proxy.ContinueWith(i =>
+                {
+                    if (i.Status != TaskStatus.RanToCompletion) return;
+                    _proxy = i.Result.uri;
+                    ProxyFound?.Invoke(_proxy);
+                }, _ctx);
+
+                proxy.Wait(_ctx);
+
                 var hardware = LoadHardware();
                 var miner = LoadMiner();
                 var benchmarks = LoadBenchmarksAsync(miner, hardware);
@@ -93,13 +104,6 @@ namespace creepHashLib.Mining
                     if (i.Status != TaskStatus.RanToCompletion) return;
                     _benchmarks = i.Result;
                     BenchmarksLoaded?.Invoke(_benchmarks);
-                }, _ctx);
-
-                proxy.ContinueWith(i =>
-                {
-                    if (i.Status != TaskStatus.RanToCompletion) return;
-                    _proxy = i.Result.uri;
-                    ProxyFound?.Invoke(_proxy);
                 }, _ctx);
 
                 while (!_ctx.IsCancellationRequested)
