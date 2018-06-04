@@ -14,6 +14,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using creepHashLib.Common;
@@ -48,7 +49,7 @@ namespace creepHashLib.Benchmark
         protected abstract HashRate Run(CancellationToken cancel);
         protected abstract Task<HashRate> RunAsync(CancellationToken cancel);
 
-        public static Benchmark Create(Miner miner, string algorithm, Hardware hardware)
+        public static Benchmark Create(Miner miner, string algorithm, Hardware hardware, Uri uri, IDictionary<Coin, int> ports)
         {
             if (miner.Name == "ccminer")
                 return new CcminerBenchmark(algorithm, hardware);

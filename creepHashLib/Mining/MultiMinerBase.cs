@@ -82,8 +82,7 @@ namespace creepHashLib.Mining
 
                 var hardware = LoadHardware();
                 var miner = LoadMiner();
-                var benchmarks = LoadBenchmarksAsync(miner, hardware);
-                var proxy = GetProxyAndPorts();
+                var benchmarks = LoadBenchmarksAsync(miner, hardware, proxy);
 
                 hardware.ContinueWith(i =>
                 {
@@ -230,11 +229,8 @@ namespace creepHashLib.Mining
             try
             {
                 var miner = Miner.Miners;
-
                 var loadedMiner = new List<Miner>();
-
-                var sb = new StringBuilder();
-                sb.AppendLine("Found miner:");
+                var sb = new StringBuilder("Found miner:");
 
                 foreach (var m in miner)
                 {
@@ -307,14 +303,14 @@ namespace creepHashLib.Mining
         }
 
         private async Task<IDictionary<Miner, IBenchmarkFile>> LoadBenchmarksAsync(Task<IList<Miner>> minerTask,
-            Task<IList<Hardware.Hardware>> hardwareTask)
+            Task<IList<Hardware.Hardware>> hardwareTask, Task<(Uri uri, IDictionary<Coin, int> ports)> proxyTask)
         {
             var miner = await minerTask;
             var hardware = await hardwareTask;
-            return LoadBenchmarks(miner, hardware);
+            return LoadBenchmarks(miner, hardware, proxyTask.Result.uri, proxyTask.Result.ports);
         }
 
-        private Dictionary<Miner, IBenchmarkFile> LoadBenchmarks(IList<Miner> miner, IEnumerable<Hardware.Hardware> hardware)
+        private Dictionary<Miner, IBenchmarkFile> LoadBenchmarks(IList<Miner> miner, IEnumerable<Hardware.Hardware> hardware, Uri uri, IDictionary<Coin, int> ports)
         {
             var benchmarkFiles = miner.ToDictionary(i => i,
                 i => (IBenchmarkFile)new BenchmarkFileJson($"benchmarks/{i.Name}-{i.Version}.json"));
@@ -353,7 +349,7 @@ namespace creepHashLib.Mining
                             {
                                 Logger.Info($"Benchmarking {a} on {h} with {m}");
                                 if (!benchmarkFiles[m].HashRates.ContainsKey(h)) benchmarkFiles[m].HashRates.Add(h, new Dictionary<string, HashRate>());
-                                var result = Benchmark.Benchmark.Create(m, a, h).Load(_ctx);
+                                var result = Benchmark.Benchmark.Create(m, a, h, uri, ports).Load(_ctx);
                                 benchmarkFiles[m].HashRates[h].Add(a, result);
                                 Logger.Info($"Benchmarked {a} on {h} with {m}: {result}");
 
