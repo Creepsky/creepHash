@@ -13,6 +13,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -27,12 +28,15 @@ namespace creepHashLib.Mining.Hardware
         {
             var platforms = ProcessHelper
                 .ReadLines($"utils/creepHashOpenCL{Filename.GetFileExtensionOs()}", "--platforms", ctx)
-                .Select(i => i.Split(';')[1])
+                .Select(i => i.Split(';'))
+                .Where(i => i.Length >= 2)
+                .Select(i => i[1])
                 .ToList();
 
-            return StringListToHardwares(
-                ProcessHelper.ReadLines($"utils/creepHashOpenCL{Filename.GetFileExtensionOs()}", "--devices",
-                    ctx), platforms);
+            var devices = ProcessHelper
+                .ReadLines($"utils/creepHashOpenCL{Filename.GetFileExtensionOs()}", "--devices", ctx);
+
+            return StringListToHardwares(devices, platforms);
         }
 
         public async Task<ISet<Hardware>> LoadAsync(CancellationToken ctx)
@@ -41,7 +45,9 @@ namespace creepHashLib.Mining.Hardware
                 (await Task.Run(
                     () => ProcessHelper.ReadLines($"utils/creepHashOpenCL{Filename.GetFileExtensionOs()}",
                         "--platforms", ctx), ctx))
-                .Select(i => i.Split(';')[1])
+                .Select(i => i.Split(';'))
+                .Where(i => i.Length >= 1)
+                .Select(i => i[1])
                 .ToList();
 
             return StringListToHardwares(
@@ -50,14 +56,31 @@ namespace creepHashLib.Mining.Hardware
                         ctx), ctx), platforms);
         }
 
-        private static ISet<Hardware> StringListToHardwares(IEnumerable<string> strings, IList<string> platforms) =>
-            new HashSet<Hardware>(strings.Select(i =>
-            {
-                var tokens = i.Split(';');
-                var platformIndex = int.Parse(tokens[1]);
+        private static ISet<Hardware> StringListToHardwares(IEnumerable<string> strings, IList<string> platforms)
+        {
+            var hardwares = strings.Select(i =>
+                {
+                    var tokens = i.Split(';');
 
-                return new Hardware(HardwareType.OpenCl, int.Parse(tokens[0]), platformIndex, tokens[2],
-                    platforms[platformIndex], int.Parse(tokens[3]), int.Parse(tokens[4]));
-            }));
+                    if (tokens.Length < 5)
+                    {
+                        //throw new Exception($"Not enough tokens for mining hardware in '{tokens}'");
+                        return null;
+                    }
+
+                    var platformIndex = int.Parse(tokens[1]);
+
+                    if (platformIndex >= platforms.Count)
+                        throw new Exception(
+                            $"Platform index for mining hardware {tokens[2]} is {platformIndex}, but there are only {platforms.Count} platforms available!");
+
+                    return new Hardware(HardwareType.OpenCl, int.Parse(tokens[0]), platformIndex, tokens[2],
+                        platforms[platformIndex], int.Parse(tokens[3]), int.Parse(tokens[4]));
+                })
+                .Where(i => i != null)
+                .ToList();
+
+            return new HashSet<Hardware>(hardwares);
+        }
     }
 }
