@@ -326,7 +326,7 @@ namespace creepHashLib.Mining
 
             Logger.Info(sb.ToString());
 
-            var identicalHardware = hardware.GroupBy(i => i.PciSlot).ToList();
+            var identicalHardware = hardware.GroupBy(i => (i.PciBus, i.PciSlot)).ToList();
             var maxGroupSize = identicalHardware.Max(i => i.Count());
 
             for (var i = 0; i < maxGroupSize; ++i)
