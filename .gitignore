@@ -268,3 +268,4 @@ creepHashConsole/utils/
 /miner
 
 *.zip
+.vscode/
