@@ -26,10 +26,16 @@ namespace creepHashLib.Common
         Tera = 1000000000000
     }
 
-    public struct HashRate
+    public class HashRate
     {
         public double Value { get; }
         public Metric Metric { get; }
+
+        public HashRate()
+        {
+            Value = 0;
+            Metric = Metric.Unit;
+        }
 
         public HashRate(double value, Metric metric)
         {
